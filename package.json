@@ -1,0 +1,33 @@
+{
+  "name": "online-library",
+  "version": "1.0.0",
+  "description": "A minor project to explore ourselves",
+  "main": "app.js",
+  "scripts": {
+    "clean": "rimraf dist/",
+    "build": "npm run clean && webpack --wactch --env production",
+    "start": "npm run clean && webpack --watch --env development"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/gitlabworkflow/online-library.git"
+  },
+  "author": "LIB",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/gitlabworkflow/online-library/issues"
+  },
+  "homepage": "https://gitlab.com/gitlabworkflow/online-library#readme",
+  "dependencies": {
+    "dotenv-webpack": "^8.0.1",
+    "express": "^4.18.2",
+    "mongoose": "^8.1.2",
+    "nodemon-webpack-plugin": "^4.8.2",
+    "rimraf": "^5.0.5",
+    "ts-loader": "^9.5.1",
+    "webpack-node-externals": "^3.0.0"
+  },
+  "devDependencies": {
+    "webpack-cli": "^5.1.4"
+  }
+}
