@@ -19,8 +19,11 @@
   },
   "homepage": "https://gitlab.com/gitlabworkflow/online-library#readme",
   "dependencies": {
+    "cryptojs": "^2.5.3",
     "dotenv-webpack": "^8.0.1",
     "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "moment": "^2.30.1",
     "mongoose": "^8.1.2",
     "nodemon-webpack-plugin": "^4.8.2",
     "rimraf": "^5.0.5",

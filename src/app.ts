@@ -1,6 +1,7 @@
 import express from 'express'
 import cluster from 'node:cluster';
 import { databaseConnection } from './database';
+import { endpoints } from './routes/endpoints';
 const port = process.env.PORT;
 const app = express();
 
@@ -34,7 +35,7 @@ app.route('/v1/lib/health-check')
     .get((req, res) => {
         res.status(200).send("Server is Okay!");
     });
-
+app.use('/v1', endpoints)
 
 export default app;
 
