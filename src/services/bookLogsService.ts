@@ -6,15 +6,35 @@ class BookLogsService {
      * @param data 
      * @returns 
      */
-    createBookLog (data) {
+    async createBookLog (data) {
         try {
-            const insertData = bookLogModel.create(data);
+            const insertData = await bookLogModel.create(data);
             return insertData;
         } catch (err) {
             console.log("Catch block error while inserting");
             return;
         }
 
+    }
+
+    async getBookLog (condition, projection = {}) {
+        try {
+            const data = await bookLogModel.findOne(condition, projection);
+            return data;
+        } catch (err) {
+            console.log("Cacth block error while getting");
+            return;
+        }
+    }
+
+    async updateBookLog (condition, data) {
+        try {
+            const updateData = await bookLogModel.findOneAndUpdate(condition, data);
+            return updateData;
+        } catch (err) {
+            console.log('Catch block error while updating bookLog');
+            return;
+        }
     }
 }
 

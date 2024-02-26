@@ -27,6 +27,9 @@ class Endpoints {
         this.router.route('/borrow/book')
             .post(this.validateAPIKey, booksController.borrowBook)
 
+        this.router.route('/return/book')
+            .post(this.validateAPIKey, booksController.returnBook)
+
         return this.router;
     }
 }
