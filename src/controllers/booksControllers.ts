@@ -1,8 +1,9 @@
 import { bookLogsService } from "../services/bookLogsService";
 import { booksService } from "../services/booksService";
 import { userService } from "../services/userService";
-import { common } from "../utils/common";
+import { bookStatusEnums } from "../utils/enums";
 import { response } from "../utils/response";
+import { common } from "../utils/common";
 import moment from 'moment';
 
 
@@ -101,7 +102,7 @@ class BooksController {
                 return response.error(req, res, {}, "Sorry! Requested book is not available");
 
             // restricting normal user to borrow special books
-            if (!(book.isAvailableForRent && user.isPremiumActive))
+            if (!(book.isAvailableForRent || user.isPremiumActive))
                 return response.error(req, res, {}, "Sorry! This book is for premium users only..");
 
             // calculating rent amount
@@ -111,7 +112,7 @@ class BooksController {
 
             // throwing error if amount and payload amount is not equal
             if (payload.amount && Number(payload.amount) !== amount) {
-                return response.error(req, res, {}, "Sorry! Book rent amount mis-match. Please check once...");
+                return response.error(req, res, {payloadAmount: payload.amount, backendAmount: amount}, "Sorry! Book rent amount mis-match. Please check once...");
             }
 
             // taking fromDate from payload if have else taking today date 
@@ -155,6 +156,78 @@ class BooksController {
         } catch (err) {
             console.log("Error in boorowBook API catch Block" + err);
             return response.error(req, res, {}, "SOMETHING-WENT-WRONG")
+        }
+    }
+
+    /**
+     * Method to return a book
+     * @param req 
+     * @param res 
+     * @returns 
+     */
+    returnBook = async (req, res) => {
+        try {
+            console.log("Return book API starts..");
+            const payload = req.body;
+            const {userId, bookId} = payload;
+            console.log({jsonObject: payload, description: "Payload....."});
+
+            // getting user details
+            const getUser = await userService.getUser({_id: userId});
+            // getting book details
+            const book = await booksService.getBookById(bookId);
+
+            // throwing error if user or book not found!
+            if (!getUser || !book) {
+                return response.error(req, res, {}, "Sorry! No details found with the providing details");
+            }
+
+            // getting book log details from bookLogs model
+            let getBookDetailsWithUserId = await bookLogsService.getBookLog({userId, bookId,status: bookStatusEnums['taken']});
+            console.log({jsonObject: getBookDetailsWithUserId, description: "Book log deatils by userId and bookId"});
+            getBookDetailsWithUserId = JSON.parse(JSON.stringify(getBookDetailsWithUserId));
+
+            if (!getBookDetailsWithUserId) {
+                return response.error(req, res, {}, "Sorry! No records are not there currently...");
+            }
+
+            // checkoing that due time is extended or not
+            const isDueTimeExtended = common.isDueTimeExtended(getBookDetailsWithUserId.dueTime);
+
+            // update object that will update the date in bookLogs model
+            const bookLogsUpdateData: any = {
+                status: bookStatusEnums.returned, 
+                bookReturnedOn: new Date(),
+                isDueTimeExtended: false
+            }
+
+            // return object that has to be send to end user
+            const returnObj: any = {
+                bookId,
+                userId,
+                returnAmount: getBookDetailsWithUserId.returnAmount
+            }
+
+            console.log({jsonObject: {getUser, book}, description: "UserDetails fro user model.."});
+
+            // if due time is extended than deducting the amount from return amount
+            if (!isDueTimeExtended) {
+                bookLogsUpdateData.isDueTimeExtended = true;
+                const isPremiumUser = getUser?.isPremiumActive;
+                const rentAmount = isPremiumUser ? 0 : common.calculateRentAmount(book?.amount, false);
+                const daysExtended = common.differenceIn2Dates(new Date(), getBookDetailsWithUserId.dueTime);
+                const finalAmount = Number(getBookDetailsWithUserId.returnAmount ) - (daysExtended * Number(rentAmount));
+                returnObj.returnAmount = finalAmount;
+            }
+
+            // updating the book logs data 
+            const updateStatusBookLogs = await bookLogsService.updateBookLog({userId, bookId, status: bookStatusEnums['taken']}, bookLogsUpdateData);
+            console.log({jsonObject: updateStatusBookLogs, description: "Updated result fo book logs model"});
+
+            return response.send(req, res, returnObj, "Success! See you soon");
+        } catch (err) {
+            console.log("Catch Block error in return book api"+ err);
+            return response.error(req, res, {}, "SOMETHING-WENT-WRONG");
         }
     }
 }

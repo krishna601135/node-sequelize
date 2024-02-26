@@ -49,6 +49,34 @@ class Common {
         console.log({jsonObject: {pages, fromDate, dueDate}, description: "Calculated due date for book return..."})
         return dueDate;
     }
+
+    /**
+     * A method to check the due time extension
+     * @param endDate 
+     * @returns 
+     */
+    isDueTimeExtended = (endDate): Boolean => {
+        const today = moment().format('YYYY-MM-DD');
+        const checkDueDate = this.differenceIn2Dates(endDate, today);
+
+        if (checkDueDate >= 0) {
+            return true
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * A method to give the difference between two dates
+     * @param startDate 
+     * @param endDate 
+     * @returns 
+     */
+    differenceIn2Dates = (startDate, endDate) => {
+        const newEndDate = moment(endDate).format('YYYY-MM-DD');
+        const difference = moment(startDate, 'YYYY-MM-DD').diff(newEndDate, 'days');
+        return difference;
+    }
 }
 
 export const common = new Common();
