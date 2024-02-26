@@ -4,7 +4,7 @@ stages:
 
 package_backend:
   stage: package
-  image: docker:19.03.12
+  image: node:16-alpine  
   services:
     - docker:19.03.12-dind
   variables:
