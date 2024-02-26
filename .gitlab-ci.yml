@@ -14,8 +14,9 @@ package_backend:
     - docker:19.03.12-dind
   variables:
     IMAGE_NAME: library
+  before_script:
+    - echo "$CI_GITLAB_TOKEN" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
   script:
-    - docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin $CI_GITLAB_TOKEN  
     - docker build -t $IMAGE_NAME:$COMMIT_REF_NAME-$CI_PIPELINE_ID .
     - docker push $IMAGE_NAME:$COMMIT_REF_NAME-$CI_PIPELINE_ID
   
