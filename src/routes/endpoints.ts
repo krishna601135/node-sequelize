@@ -22,7 +22,7 @@ class Endpoints {
 
     configureRoutes(): Router {
         this.router.route('/get/books')
-            .get(this.validateAPIKey, booksController.books);
+            .get(booksController.books);
 
         this.router.route('/borrow/book')
             .post(this.validateAPIKey, booksController.borrowBook)
