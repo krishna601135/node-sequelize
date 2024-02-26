@@ -1,17 +1,22 @@
 stages:
+  - build
   - package
 
+build_backend:
+  stage: build
+  image: node:16-alpine
+  script:
+    - npm install
+    - npm run build
 
 package_backend:
   stage: package
-  image: node:16-alpine  
+  image: docker:19.03.12
   services:
     - docker:19.03.12-dind
   variables:
     IMAGE_NAME: library
   script:
-    - npm install
-    - npm run build
     - docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin $CI_GITLAB_TOKEN  
     - docker build -t $IMAGE_NAME:$COMMIT_REF_NAME-$CI_PIPELINE_ID .
     - docker push $IMAGE_NAME:$COMMIT_REF_NAME-$CI_PIPELINE_ID
