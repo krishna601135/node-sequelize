@@ -12,7 +12,6 @@ package_backend:
   image: docker:19.03.12
   services:
     - docker:19.03.12-dind
-  variables:
   before_script:
     - echo "$CI_GITLAB_TOKEN" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
   script:
