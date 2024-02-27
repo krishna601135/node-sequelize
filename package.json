@@ -5,8 +5,8 @@
   "main": "app.js",
   "scripts": {
     "clean": "rimraf dist/",
-    "build": "npm run clean && webpack --watch --env production",
-    "start": "webpack --watch --env development"
+    "build": "npm run clean && webpack --config webpack.config.js --env=production",
+    "start": "npm run clean && webpack --watch --env development"
   },
   "repository": {
     "type": "git",
