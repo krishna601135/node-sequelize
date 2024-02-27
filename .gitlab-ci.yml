@@ -8,6 +8,8 @@ package_backend:
     - docker:20.10.16-dind
   variables:
     IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  tags:
+    - test
   before_script:
     - apk add --no-cache nodejs npm
     - echo "$CI_GITLAB_TOKEN" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
