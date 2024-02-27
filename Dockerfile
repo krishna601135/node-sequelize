@@ -9,10 +9,6 @@ COPY package*.json ./
 # Install app dependencies
 RUN npm install
 
-COPY . .
-
-RUN npm run build
-
 #copy build folder to app directory
 COPY dist app
 
