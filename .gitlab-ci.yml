@@ -1,14 +1,6 @@
 stages:
-  - build
   - package
 
-build_backend:
-  stage: build
-  image: node:16-alpine
-  script:
-    - npm install
-    - npm run build
-  
 package_backend:
   stage: package
   image: docker:20.10.16
@@ -17,13 +9,14 @@ package_backend:
   variables:
     IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   before_script:
+    - apk add --no-cache nodejs npm
     - echo "$CI_GITLAB_TOKEN" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
   script:
+    - npm install
+    - npm run build
     - docker build -t $IMAGE_TAG .
     - docker push $IMAGE_TAG
-  dependencies:
-    - build_backend
-  
+
 
 
 
