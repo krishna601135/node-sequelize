@@ -30,6 +30,9 @@ class Endpoints {
         this.router.route('/return/book')
             .post(this.validateAPIKey, booksController.returnBook)
 
+        this.router.route('/rating/book')
+            .post(this.validateAPIKey, booksController.ratingBook)
+
         return this.router;
     }
 }

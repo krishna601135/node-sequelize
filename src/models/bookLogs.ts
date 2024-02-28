@@ -8,6 +8,7 @@ const bookLog = new mongoose.Schema({
     startTime: {type: Date},
     dueTime: {type: Date},
     bookReturnedOn: {type: Date},
+    rating: {type: Number},
     isDueTimeExtended: {type: Boolean},
     status: {type: Number, default: 0},
     paidAmount: {type: Number},
