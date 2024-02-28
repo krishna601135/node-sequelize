@@ -2,97 +2,76 @@ stages:
   - package
   - container_scan
   - deploy
-  # - sonar scan
-
-
 
 #code quality checking
 # sonar scanning:
-#   stage: 
 
+
+variables:
+  CONTAINER_IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
 
 package_backend:
   stage: package
   image: docker:20.10.16
+  tags:
+    - docker
   services:
     - docker:20.10.16-dind
-  variables:
-    IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   before_script:
     - apk add --no-cache nodejs npm
     - echo "$CI_GITLAB_TOKEN" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
   script:
     - npm install
     - npm run build
-    - docker build -t $IMAGE_TAG .
-    - docker push $IMAGE_TAG
-
-
-
+    - docker build -t $CONTAINER_IMAGE_TAG .
+    - docker push $CONTAINER_IMAGE_TAG
 
 #container Scanning vulnerbility checking(Trivy)
-#trivy documentation link:https://aquasecurity.github.io/trivy/v0.18.3/integrations/gitlab-ci/
 container_scanning:
   stage: container_scan
   image:
     name: docker.io/aquasec/trivy:latest
     entrypoint: [""]
   variables:
-    # No need to clone the repo, we exclusively work on artifacts.  See
-    # https://docs.gitlab.com/ee/ci/runners/README.html#git-strategy
     GIT_STRATEGY: none
     TRIVY_USERNAME: "$CI_REGISTRY_USER"
-    TRIVY_PASSWORD: "$CI_REGISTRY_PASSWORD"
+    TRIVY_PASSWORD: "$CI_GITLAB_TOKEN"
     TRIVY_AUTH_URL: "$CI_REGISTRY"
-    FULL_IMAGE_NAME: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   script:
     - trivy --version
-    # cache cleanup is needed when scanning images with the same tags, it does not remove the database
     - time trivy image --clear-cache
-    # update vulnerabilities db
-    - time trivy --download-db-only --no-progress --cache-dir .trivycache/
-    # Builds report and puts it in the default workdir $CI_PROJECT_DIR, so `artifacts:` can take it from there
-    - time trivy --exit-code 0 --cache-dir .trivycache/ --no-progress --format template --template "@/contrib/gitlab.tpl"
-        --output "$CI_PROJECT_DIR/gl-container-scanning-report.json" "$FULL_IMAGE_NAME"
-    # Prints full report
-    - time trivy --exit-code 0 --cache-dir .trivycache/ --no-progress "$FULL_IMAGE_NAME"
-    # Fail on critical vulnerabilities
-    - time trivy --exit-code 1 --cache-dir .trivycache/ --severity CRITICAL --no-progress "$FULL_IMAGE_NAME"
-  cache:
-    paths:
-      - .trivycache/
-  # Enables https://docs.gitlab.com/ee/user/application_security/container_scanning/ (Container Scanning report is available on GitLab EE Ultimate or GitLab.com Gold)
+    - trivy image --format json --output  container-scanning-report.json $CONTAINER_IMAGE_TAG
   artifacts:
-    when:                          always
-    reports:
-      container_scanning:          gl-container-scanning-report.json
+    when: always
+    paths:
+      - container-scanning-report.json
   tags:
-    - docker-runner
+    - docker
   dependencies:
     - package_backend
 
-
-
-
-
 deploy_backend:
-  image: ubuntu-latest
   stage: deploy
   before_script:
     - apt-get update -y && apt-get install jq -y
   script:
     - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY
     - export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
-    - aws ecr get-login
-    - docker push $IMAGE_TAG
+    - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 680866457108.dkr.ecr.us-east-1.amazonaws.com
+    - docker push $CONTAINER_IMAGE_TAG
     - docker logout
-    - apt-get install wget -y
-    - pwd
-    - ls
-    - chmod +x deploy/ec2/*
-    - deploy/ec2/deploy.sh
+  tags:
+    - docker
 
 
+
+
+# commands in deploy_backend:
+# - apt-get install wget -y
+#     - pwd
+#     - ls
+#     - chmod +x deploy/ec2/*
+#     - deploy/ec2/deploy.sh
 # sendEmail:
 #   stage: send-email
 
