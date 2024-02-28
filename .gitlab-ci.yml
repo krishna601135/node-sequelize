@@ -32,19 +32,13 @@ container_scanning:
     TRIVY_USERNAME: "$CI_REGISTRY_USER"
     TRIVY_PASSWORD: "$CI_GITLAB_TOKEN"
     TRIVY_AUTH_URL: "$CI_REGISTRY"
-    FULL_IMAGE_NAME: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   script:
     - trivy --version
     - time trivy image --clear-cache
-    - time trivy --download-db-only --no-progress --cache-dir .trivycache/
-    - trivy image --severity HIGH,CRITICAL IMAGE_TAG
-  cache:
-    paths:
-      - .trivycache/
+    - trivy image --json --output /tmp/container-scanning-report.json my-container-image:latest
   artifacts:
-    when:                          always
-    reports:
-      container_scanning:          gl-container-scanning-report.json
+    paths:
+      - /tmp/container-scanning-report.json  
   tags:
     - docker
   dependencies:
