@@ -35,7 +35,7 @@ container_scanning:
   script:
     - trivy --version
     - time trivy image --clear-cache
-    - trivy image --json --output /tmp/container-scanning-report.json my-container-image:latest
+    - trivy image --json --output /tmp/container-scanning-report.json $IMAGE_TAG
   artifacts:
     paths:
       - /tmp/container-scanning-report.json  
