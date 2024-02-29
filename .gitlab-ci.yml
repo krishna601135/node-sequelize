@@ -3,14 +3,13 @@ stages:
   - container_scan
   - deploy
 
-
-
 #code quality checking
 # sonar scanning:
 
-variables:
-  CONTAINER_IMAGE_TAG: $AWS_REGISTRY_NAME:$CI_PIPELINE_ID
 
+#variables section
+variables:
+  CONTAINER_IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
 
 
 
@@ -27,12 +26,16 @@ package_backend:
   script:
     - npm install
     - npm run build
+    - echo $CI_REGISTRY_IMAGE
+    - echo $CI_COMMIT_REF_SLUG
+    - echo $CI_COMMIT_REF_NAME
+    - echo $CONTAINER_IMAGE_TAG
     - docker build -t $CONTAINER_IMAGE_TAG .
     - docker push $CONTAINER_IMAGE_TAG
-    - docker tag $CONTAINER_IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$CONTAINER_IMAGE_TAG
+    # - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG <your-aws-account-id>.dkr.ecr.<your-region>.amazonaws.com/<your-repository-name>:<tag>
 
 
-
+    
 #container Scanning vulnerbility checking for backend image(Trivy)
 container_scanning:
   stage: container_scan
@@ -59,7 +62,7 @@ container_scanning:
 
 
 
-#############deploying backend###########################################
+#deploying backend
 deploy_backend:
   stage: deploy
   before_script:
@@ -69,15 +72,10 @@ deploy_backend:
     - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY
     - export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
     - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 680866457108.dkr.ecr.us-east-1.amazonaws.com
-    - docker push $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$CONTAINER_IMAGE_TAG
+    - docker push $CONTAINER_IMAGE_TAG
     - docker logout
   tags:
     - docker
-
-
-
-
-
 
 
 
