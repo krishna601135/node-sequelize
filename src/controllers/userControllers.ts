@@ -8,12 +8,7 @@ class UserControllers {
     getUserById = async (req: Request, res: Response, next: NextFunction) => {
         try {
             let payload: userInterface = Object.keys(req.query).length > 0 ? req.query : req.body;
-            console.log(req.body, req.query, "erfiuwri")
             console.log(payload, "Payload......")
-
-            if (req.query){
-                console.log("ietgsdljklvs")
-            }
 
             if (!payload) {
                 return response.error(req, res, {}, "UserId is required");
