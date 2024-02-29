@@ -8,12 +8,11 @@ stages:
 #code quality checking
 # sonar scanning:
 
-
-
-
-
 variables:
-  CONTAINER_IMAGE_TAG: $AWS_REGISTRY_NAME:$CI_COMMIT_REF_SLUG
+  CONTAINER_IMAGE_TAG: $AWS_REGISTRY_NAME:$CI_PIPELINE_ID
+
+
+
 
 package_backend:
   stage: package
