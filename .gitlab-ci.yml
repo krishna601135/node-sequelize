@@ -27,8 +27,8 @@ package_backend:
     - npm install
     - npm run build
     - docker build -t $CI_REGISTRY_IMAGE .
+    - docker push $CI_REGISTRY_IMAGE
     - docker tag $CONTAINER_IMAGE_TAG $AWS_REGISTRY_NAME.dkr.ecr.us-east-1.amazonaws.com/$CONTAINER_IMAGE_TAG
-    - docker push $AWS_REGISTRY_NAME.dkr.ecr.us-east-1.amazonaws.com/$CONTAINER_IMAGE_TAG
 
 
     
