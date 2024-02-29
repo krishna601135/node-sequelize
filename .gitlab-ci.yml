@@ -20,8 +20,6 @@ package_backend:
     - apk add --no-cache nodejs npm
     - echo "$CI_GITLAB_TOKEN" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
   script:
-    - echo $CI_COMMIT_REF_SLUG
-    - echo $CI_COMMIT_REF_NAME
     - npm install
     - npm run build
     - docker build -t $CONTAINER_IMAGE_TAG .
