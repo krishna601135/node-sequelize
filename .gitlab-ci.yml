@@ -21,6 +21,8 @@ package_backend:
     - apk update
     - apk add --no-cache nodejs npm
     - echo "$CI_GITLAB_TOKEN" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+    - echo $CI_REGISTRY
+    - echo $CI_REGISTRY_IMAGE
   script:
     - npm install
     - npm run build
@@ -55,6 +57,7 @@ container_scanning:
 #deploying backend
 deploy_backend:
   stage: deploy
+  when: manual
   before_script:
     - apk add aws-cli
   script:
@@ -66,10 +69,29 @@ deploy_backend:
     - docker logout
   tags:
     - docker
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # for creating project runners
 # https://killercoda.com/rkalluru
 # volumes = ["/cache", "/var/run/docker.sock:/var/run/docker.sock", "/builds:/builds"]
 # sudo usermod -aG docker root
+
+
+#Configuration (with the authentication token) was saved in "/etc/gitlab-runner/config.toml"
 
 # commands in deploy_backend:
 # - apt-get install wget -y
@@ -97,3 +119,5 @@ deploy_backend:
 # AWS keeps on updating frequently every minute through node we have written a process for everyday like we are writting a CRON job to specify when the job should run we have written a service there also in CRON job
 # through this we are getting the realtime data for it
 # the data is being saved in mongo db and through REST API's we are getting the data and consuming them in the front end.
+# Username: training@purpletalk.com
+# password: L3@rn!NGs$321
