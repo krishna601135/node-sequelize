@@ -6,12 +6,9 @@ stages:
 #code quality checking
 # sonar scanning:
 
-
 #variables section
 variables:
   CONTAINER_IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-
-
 
 package_backend:
   stage: package
@@ -21,6 +18,7 @@ package_backend:
   services:
     - docker:20.10.16-dind
   before_script:
+    - apk update
     - apk add --no-cache nodejs npm
     - echo "$CI_GITLAB_TOKEN" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
   script:
@@ -28,10 +26,8 @@ package_backend:
     - npm run build
     - docker build -t $CI_REGISTRY_IMAGE .
     - docker push $CI_REGISTRY_IMAGE
-    - docker tag $CI_REGISTRY_IMAGE $AWS_ACCOUNT_ID.dkr.ecr.ap-south-1.amazonaws.com/library:latest
+    - docker tag $CI_REGISTRY_IMAGE 680866457108.dkr.ecr.ap-south-1.amazonaws.com/library:latest
 
-
-    
 #container Scanning vulnerbility checking for backend image(Trivy)
 container_scanning:
   stage: container_scan
@@ -56,8 +52,6 @@ container_scanning:
   dependencies:
     - package_backend
 
-
-
 #deploying backend
 deploy_backend:
   stage: deploy
@@ -68,23 +62,10 @@ deploy_backend:
     - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY
     - export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
     - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 680866457108.dkr.ecr.ap-south-1.amazonaws.com
-    - docker push $AWS_ACCOUNT_ID.dkr.ecr.ap-south-1.amazonaws.com/libaray:latest
+    - docker push 680866457108.dkr.ecr.ap-south-1.amazonaws.com/library:latest
     - docker logout
   tags:
     - docker
-
-
-
-
-
-
-
-
-
-
-
-
-
 # for creating project runners
 # https://killercoda.com/rkalluru
 # volumes = ["/cache", "/var/run/docker.sock:/var/run/docker.sock", "/builds:/builds"]
@@ -103,17 +84,13 @@ deploy_backend:
 # CI_COMMIT_REF_SLUG --> CI_COMMIT_REF_NAME in lowercase, shortened to 63 bytes, and with everything except 0-9 and a-z replaced with -.
 # No leading / trailing -. Use in URLs, host names and domain names.
 
-
-
-
-
 # Frontend:
-# react 
+# react
 
 # backend:
 # node
 # node js through AWS communication
-# to save cost we did not integrate with frontned 
+# to save cost we did not integrate with frontned
 # communication happens through nodjs
 
 # Updates are through rest API's for the frontend to be consumed
