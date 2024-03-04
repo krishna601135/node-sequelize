@@ -28,7 +28,7 @@ package_backend:
     - npm run build
     - docker build -t $CI_REGISTRY_IMAGE .
     - docker push $CI_REGISTRY_IMAGE
-    - docker tag $CONTAINER_IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/library:latest
+    - docker tag $CI_REGISTRY_IMAGE $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/library:latest
 
 
     
