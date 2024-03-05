@@ -3,8 +3,10 @@ stages:
   - container_scan
   - deploy
 
+
 #code quality checking
 # sonar scanning:
+
 
 #variables section
 variables:
@@ -21,14 +23,14 @@ package_backend:
     - apk update
     - apk add --no-cache nodejs npm
     - echo "$CI_GITLAB_TOKEN" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
-    - echo $CI_REGISTRY
-    - echo $CI_REGISTRY_IMAGE
   script:
     - npm install
     - npm run build
     - docker build -t $CI_REGISTRY_IMAGE .
     - docker push $CI_REGISTRY_IMAGE
     - docker tag $CI_REGISTRY_IMAGE 680866457108.dkr.ecr.ap-south-1.amazonaws.com/library:latest
+
+
 
 #container Scanning vulnerbility checking for backend image(Trivy)
 container_scanning:
@@ -53,6 +55,7 @@ container_scanning:
     - docker
   dependencies:
     - package_backend
+
 
 #deploying backend
 deploy_backend:
