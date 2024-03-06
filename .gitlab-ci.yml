@@ -1,10 +1,18 @@
 stages:
+  - decrypt
   - package
   - container_scan
   - deploy
 
 #code quality checking
 # sonar scanning:
+
+
+decrypt_env:
+  stage: decrypt
+  script:
+    - echo "$ENV_PASS_PHRASE" | gpg --batch --yes --passphrase-fd 0 --decrypt --output .env .env.gpg
+  
 
 #variables section
 variables:
@@ -26,7 +34,7 @@ package_backend:
     - npm run build
     - docker build -t $CI_REGISTRY_IMAGE .
     - docker push $CI_REGISTRY_IMAGE
-    - docker tag $CI_REGISTRY_IMAGE 680866457108.dkr.ecr.ap-south-1.amazonaws.com/library:latest
+    - docker tag $CI_REGISTRY_IMAGE 680866457108.dkr.ecr.us-east-1.amazonaws.com/library:latest
 
 #container Scanning vulnerbility checking for backend image(Trivy)
 container_scanning:
@@ -61,11 +69,16 @@ deploy_backend:
     - aws --version
     - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY
     - export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
-    - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 680866457108.dkr.ecr.ap-south-1.amazonaws.com
-    - docker push 680866457108.dkr.ecr.ap-south-1.amazonaws.com/library:latest
+    - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 680866457108.dkr.ecr.us-east-1.amazonaws.com
+    - docker push 680866457108.dkr.ecr.us-east-1.amazonaws.com/library:latest
     - docker logout
   tags:
     - docker
+
+
+
+
+
 # for creating project runners
 # https://killercoda.com/rkalluru
 # volumes = ["/cache", "/var/run/docker.sock:/var/run/docker.sock", "/builds:/builds"]
