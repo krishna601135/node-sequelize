@@ -3,13 +3,12 @@ stages:
   - container_scan
   - deploy
 
-
 #code quality checking
 # sonar scanning:
 
-
 #variables section
 variables:
+  CONTAINER_IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   CONTAINER_IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
 
 package_backend:
@@ -49,7 +48,9 @@ container_scanning:
     - trivy image --format json --output  container-scanning-report.json $CI_REGISTRY_IMAGE
   artifacts:
     when: always
+    when: always
     paths:
+      - container-scanning-report.json
       - container-scanning-report.json
   tags:
     - docker
