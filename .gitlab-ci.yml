@@ -1,5 +1,4 @@
 stages:
-  - decrypt
   - package
   - container_scan
   - deploy
@@ -7,17 +6,13 @@ stages:
 #code quality checking
 # sonar scanning:
 
-
-decrypt_env:
-  stage: decrypt
-  script:
-    - echo "$ENV_PASS_PHRASE" | gpg --batch --yes --passphrase-fd 0 --decrypt --output .env .env.gpg
-  
-
 #variables section
 variables:
   CONTAINER_IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
 
+
+
+#building docker image
 package_backend:
   stage: package
   image: docker:20.10.16
@@ -28,6 +23,8 @@ package_backend:
   before_script:
     - apk update
     - apk add --no-cache nodejs npm
+    - apk add --no-cache gnupg
+    - echo "$ENV_PASS_PHRASE" | gpg --batch --yes --passphrase-fd 0 --decrypt --output .env .env.gpg
     - echo "$CI_GITLAB_TOKEN" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
   script:
     - npm install
@@ -35,6 +32,8 @@ package_backend:
     - docker build -t $CI_REGISTRY_IMAGE .
     - docker push $CI_REGISTRY_IMAGE
     - docker tag $CI_REGISTRY_IMAGE 680866457108.dkr.ecr.us-east-1.amazonaws.com/library:latest
+
+
 
 #container Scanning vulnerbility checking for backend image(Trivy)
 container_scanning:
@@ -60,6 +59,8 @@ container_scanning:
   dependencies:
     - package_backend
 
+
+
 #deploying backend
 deploy_backend:
   stage: deploy
@@ -74,7 +75,6 @@ deploy_backend:
     - docker logout
   tags:
     - docker
-
 
 
 
