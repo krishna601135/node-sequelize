@@ -1,7 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 
 # Define email content and recipients
 EMAIL_SUBJECT="Container Scanning Report"
+
 RECIPIENT="krishnakakarapathi@gmail.com"
 
 # Download the artifact using wget

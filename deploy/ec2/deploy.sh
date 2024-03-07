@@ -16,8 +16,7 @@ else
     aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 680866457108.dkr.ecr.us-east-1.amazonaws.com
     
     # Remove previous running containers (if necessary)
-    # docker stop <container-name>
-    # docker rm <container-name>
+    docker container prune -f
 
     # Pull the image from Amazon ECR
     docker pull 680866457108.dkr.ecr.us-east-1.amazonaws.com/library:latest
