@@ -7,8 +7,6 @@ stages:
 #code quality checking
 # sonar scanning:
 
-
-
 ######building docker image
 package_backend:
   stage: package
@@ -30,7 +28,6 @@ package_backend:
     - docker push $CI_REGISTRY_IMAGE
     - docker tag $CI_REGISTRY_IMAGE 680866457108.dkr.ecr.us-east-1.amazonaws.com/library:latest
 
-
 #container Scanning vulnerbility checking for backend image(Trivy)
 container_scanning:
   stage: container_scan
@@ -46,25 +43,22 @@ container_scanning:
     - trivy --version
     # cache cleanup is needed when scanning images with the same tags, it does not remove the database
     - time trivy image --clear-cache
-    - trivy image --format json -o container-scanning-report.json --severity HIGH --exit-code 1 $CI_REGISTRY_IMAGE || true
+    - trivy image --format json -o container-scanning-report.json --severity HIGH --exit-code 1 $CI_REGISTRY_IMAGE || echo "FAILED" > container-scan-result.txt
   artifacts:
     when: always
     paths:
       - container-scanning-report.json
+      - container-scan-result.txt
   tags:
     - docker
   dependencies:
     - package_backend
-
-
-
 
 #######deploying backend if no vulnerbilites were found
 deploy_backend:
   stage: deploy
   before_script:
     - apk add aws-cli
-    - echo $TRAVIS_TEST_RESULT
   script:
     - aws --version
     - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY
@@ -72,23 +66,18 @@ deploy_backend:
     - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 680866457108.dkr.ecr.us-east-1.amazonaws.com
     - docker push 680866457108.dkr.ecr.us-east-1.amazonaws.com/library:latest
     - docker logout
-  rules:
-    - if: '$TRAVIS_TEST_RESULT == "0"'
-      when: always
-    # - when: never
+    - chmod +x deploy/ec2/*
+    - deploy/ec2/deploy.sh
+  dependencies:
+    - container_scanning
   tags:
     - docker
-
-
-
-
-
 
 #########sending email to the developement team if any high vulnerbilities found in container_scanning stage
 send_email:
   stage: send_email
   script:
-    - if [ $TRAVIS_TEST_RESULT -ne 0 ]; then email/send_email_script.sh; fi
+    - if [ -f "container-scan-result.txt" ]; then /send_email_script.sh; fi
   before_script:
     - echo $CI_JOB_URL
     - apk add --no-cache wget

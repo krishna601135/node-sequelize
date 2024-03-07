@@ -1,16 +1,28 @@
-wget pemfile (#download the pem file using wget package)
+if [ -f "container-scan-result.txt" ]; then
+    echo "Container scanning failed. Skipping deployment."
+else
+    echo "No vulnerabilities found. Deploying image..."
 
-chmod 400 pem (give permission)
+    # Give permission to pem file
+    chmod 400 pem
 
-#connect to dev server using ssh
-ssh -i 
+    # Connect to dev server using SSH
+    ssh -i pem user@dev-server
 
-ecr login
+    # Login to Amazon ECR (Elastic Container Registry)
+    aws ecr get-login-password --region your-region | docker login --username AWS --password-stdin your-account-id.dkr.ecr.your-region.amazonaws.com
 
-remove previous running containers
+    # Remove previous running containers (if necessary)
+    # docker stop <container-name>
+    # docker rm <container-name>
 
-docker pull image from Ecr
+    # Pull the image from Amazon ECR
+    docker pull your-account-id.dkr.ecr.your-region.amazonaws.com/your-image
 
-#download the image from the registry and containerize
-docker run
+    # Run the container
+    # docker run -d -p 80:80 your-account-id.dkr.ecr.your-region.amazonaws.com/your-image
+fi
+
+
+
 
