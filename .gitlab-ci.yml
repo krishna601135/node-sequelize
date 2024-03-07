@@ -72,6 +72,10 @@ deploy_backend:
     - docker logout
     - chmod +x deploy.sh
     - sh deploy.sh 
+  rules:
+    - if: '$TRAVIS_TEST_RESULT == 0'
+      when: always
+    - when: never
   tags:
     - docker
 
