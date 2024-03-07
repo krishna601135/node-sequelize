@@ -4,23 +4,26 @@ else
     echo "No vulnerabilities found. Deploying image..."
 
     # Give permission to pem file
-    chmod 400 pem
+    chmod 400 $UBUNTU_KEYPAIR
 
     # Connect to dev server using SSH
-    ssh -i pem user@dev-server
+    ssh -i UBUNTU_KEYPAIR ubuntu@3.91.229.191
+
+    #login into root user
+    sudo -i
 
     # Login to Amazon ECR (Elastic Container Registry)
-    aws ecr get-login-password --region your-region | docker login --username AWS --password-stdin your-account-id.dkr.ecr.your-region.amazonaws.com
-
+    aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 680866457108.dkr.ecr.us-east-1.amazonaws.com
+    
     # Remove previous running containers (if necessary)
     # docker stop <container-name>
     # docker rm <container-name>
 
     # Pull the image from Amazon ECR
-    docker pull your-account-id.dkr.ecr.your-region.amazonaws.com/your-image
+    docker pull 680866457108.dkr.ecr.us-east-1.amazonaws.com/library:latest
 
     # Run the container
-    # docker run -d -p 80:80 your-account-id.dkr.ecr.your-region.amazonaws.com/your-image
+    docker run -d -p 5000:4001 680866457108.dkr.ecr.us-east-1.amazonaws.com/library:latest
 fi
 
 
