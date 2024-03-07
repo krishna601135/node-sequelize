@@ -6,7 +6,6 @@ stages:
 #code quality checking
 # sonar scanning:
 
-
 #building docker image
 package_backend:
   stage: package
@@ -27,9 +26,6 @@ package_backend:
     - docker build -t $CI_REGISTRY_IMAGE .
     - docker push $CI_REGISTRY_IMAGE
     - docker tag $CI_REGISTRY_IMAGE 680866457108.dkr.ecr.us-east-1.amazonaws.com/library:latest
-  
-
-
 
 #container Scanning vulnerbility checking for backend image(Trivy)
 container_scanning:
@@ -56,8 +52,6 @@ container_scanning:
   dependencies:
     - package_backend
 
-
-
 #deploying backend
 deploy_backend:
   stage: deploy
@@ -70,21 +64,22 @@ deploy_backend:
     - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 680866457108.dkr.ecr.us-east-1.amazonaws.com
     - docker push 680866457108.dkr.ecr.us-east-1.amazonaws.com/library:latest
     - docker logout
-    - chmod +x deploy.sh
-    - sh deploy.sh 
+    # - chmod +x deploy.sh
+    # - sh deploy.sh
   rules:
-    - if: '$TRAVIS_TEST_RESULT == 0'
+    - if: '$TRAVIS_TEST_RESULT == "0"'
       when: always
     - when: never
   tags:
     - docker
 
 
+
+    
 # sending Email:
 #   stage: sendEmail
-#   script: 
-#     - 
-
+#   script:
+#     -
 
 # for creating project runners
 # https://killercoda.com/rkalluru
