@@ -75,7 +75,7 @@ deploy_backend:
   rules:
     - if: '$TRAVIS_TEST_RESULT == "0"'
       when: always
-    - when: never
+    # - when: never
   tags:
     - docker
 
@@ -92,7 +92,7 @@ send_email:
   before_script:
     - apk add --no-cache wget
     - chmod +x ./email/send_email_script.sh
-  only:
+  dependencies:
     - container_scanning
   tags:
     - docker
