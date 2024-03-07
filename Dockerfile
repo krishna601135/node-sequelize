@@ -12,6 +12,7 @@ COPY package*.json ./
 # Install app dependencies
 RUN npm install
 
+RUN apk --no-cache add mailx
 
 #Expose to port
 EXPOSE 5000
