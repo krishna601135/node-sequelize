@@ -12,4 +12,4 @@ wget -O container-scanning-report.json "${CI_JOB_URL}/artifacts/raw/container-sc
 EMAIL_BODY="Hello,\n\nPlease find attached the container scanning report.\n\nRegards,\nYour Team"
 
 # Send email with attachment
-echo -e "$EMAIL_BODY" | mail -s "$EMAIL_SUBJECT" -a "container-scanning-report.json" "$RECIPIENT"
+echo -e "$EMAIL_BODY" | mail -s "$EMAIL_SUBJECT" "$RECIPIENT" -a "container-scanning-report.json" 
