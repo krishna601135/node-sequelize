@@ -86,6 +86,7 @@ send_email:
   before_script:
     - echo $CI_JOB_URL
     - apk add --no-cache wget
+    - apk add --no-cache mailx
     - chmod +x email/send_email_script.sh
   dependencies:
     - container_scanning
