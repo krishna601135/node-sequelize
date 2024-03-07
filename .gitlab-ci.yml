@@ -2,14 +2,15 @@ stages:
   - package
   - container_scan
   - deploy
+  - sendEmail
 
 #code quality checking
 # sonar scanning:
 
+
 #variables section
 variables:
   CONTAINER_IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-
 
 
 #building docker image
@@ -32,6 +33,7 @@ package_backend:
     - docker build -t $CI_REGISTRY_IMAGE .
     - docker push $CI_REGISTRY_IMAGE
     - docker tag $CI_REGISTRY_IMAGE 680866457108.dkr.ecr.us-east-1.amazonaws.com/library:latest
+  
 
 
 
@@ -48,8 +50,9 @@ container_scanning:
     TRIVY_AUTH_URL: "$CI_REGISTRY"
   script:
     - trivy --version
+    # cache cleanup is needed when scanning images with the same tags, it does not remove the database
     - time trivy image --clear-cache
-    - trivy image --format json --output  container-scanning-report.json $CI_REGISTRY_IMAGE
+    - trivy image --format json -o container-scanning-report.json --severity HIGH --exit-code 1 $CI_REGISTRY_IMAGE || true
   artifacts:
     when: always
     paths:
@@ -73,10 +76,16 @@ deploy_backend:
     - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 680866457108.dkr.ecr.us-east-1.amazonaws.com
     - docker push 680866457108.dkr.ecr.us-east-1.amazonaws.com/library:latest
     - docker logout
+    - chmod +x deploy.sh
+    - sh deploy.sh 
   tags:
     - docker
 
 
+# sending Email:
+#   stage: sendEmail
+#   script: 
+#     - 
 
 
 # for creating project runners
