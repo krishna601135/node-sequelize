@@ -2,25 +2,19 @@ stages:
   - package
   - container_scan
   - deploy
-  - sendEmail
 
 #code quality checking
 # sonar scanning:
-
-
-#variables section
-variables:
-  CONTAINER_IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
 
 
 #building docker image
 package_backend:
   stage: package
   image: docker:20.10.16
-  tags:
-    - docker
   services:
     - docker:20.10.16-dind
+  tags:
+    - docker
   before_script:
     - apk update
     - apk add --no-cache nodejs npm
