@@ -65,8 +65,8 @@ deploy_backend:
     - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 680866457108.dkr.ecr.us-east-1.amazonaws.com
     - docker push 680866457108.dkr.ecr.us-east-1.amazonaws.com/library:latest
     - docker logout
-    - chmod +x deploy/ec2/*
-    - deploy/ec2/deploy.sh
+    - chmod +x ./deploy/ec2/*
+    - ./deploy/ec2/deploy.sh
   dependencies:
     - container_scanning
   tags:
@@ -78,11 +78,11 @@ deploy_backend:
 send_email:
   stage: send_email
   script:
-    - if [ -f "container-scan-result.txt" ]; then /send_email_script.sh; fi
+    - if [ -f "container-scan-result.txt" ]; then ./send_email_script.sh; fi
   before_script:
     - echo $CI_JOB_URL
     - apk add --no-cache wget
-    - chmod +x email/send_email_script.sh
+    - chmod +x ./email/send_email_script.sh
   dependencies:
     - container_scanning
   tags:

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Define email content and recipients
 EMAIL_SUBJECT="Container Scanning Report"
