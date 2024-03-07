@@ -37,6 +37,9 @@ container_scanning:
     TRIVY_USERNAME: "$CI_REGISTRY_USER"
     TRIVY_PASSWORD: "$CI_GITLAB_TOKEN"
     TRIVY_AUTH_URL: "$CI_REGISTRY"
+  before_script:
+    - echo $CI_JOB_URL
+    - echo $CI_PROJECT_DIR
   script:
     - trivy --version
     # cache cleanup is needed when scanning images with the same tags, it does not remove the database
@@ -79,6 +82,7 @@ send_email:
   stage: send_email
   script:
     - if [ -f "container-scan-result.txt" ]; then email/send_email_script.sh; fi
+    # if [ -f "$CI_PROJECT_DIR/container-scan-result.txt" ]
   before_script:
     - echo $CI_JOB_URL
     - apk add --no-cache wget
