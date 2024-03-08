@@ -47,7 +47,7 @@ container_scanning:
     - trivy image --format json -o container-scanning-report.json --severity HIGH --exit-code 1 $CI_REGISTRY_IMAGE || echo "FAILED" > container-scan-result.txt
     - apk add --no-cache nodejs npm
     - npm install mongodb
-    - node upload.js node uploadToMongoDB.js container-scanning-report.json
+    - node upload.js node reports/uploadToMongoDB.js container-scanning-report.json
   artifacts:
     when: always
     paths:
