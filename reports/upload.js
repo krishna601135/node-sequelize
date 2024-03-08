@@ -4,9 +4,6 @@ const fs = require("fs");
 // MongoDB connection URI
 const uri = "mongodb+srv://library:saimohanlib@cluster0.k1eoilz.mongodb.net/online-library";
 
-// Database name
-const dbName = process.env.DATABASE_NAME;
-
 // Collection name
 const collectionName = "reports";
 
