@@ -101,8 +101,7 @@ send_email:
     # - apk add --no-cache mailx
     - apk update
     - apk add mongodb-tools
-    - rc-update add mongodb default
-    - rc-service mongodb start
+    - service mongodb start
     - mongo --version
     - chmod +x ./email/send_email_script.sh
   dependencies:
