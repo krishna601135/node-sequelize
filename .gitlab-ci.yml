@@ -82,25 +82,24 @@ deploy_backend:
     - docker
 
 #########sending email to the developement team if any high vulnerbilities found in container_scanning stage
-send_email:
-  stage: send_email
-  script:
-    - if [ -f "container-scan-result.txt" ]; then ./email/send_email_script.sh; fi
-    # if [ -f "$CI_PROJECT_DIR/container-scan-result.txt" ]
-  before_script:
-    - echo $CI_JOB_URL
-    - apk add --no-cache wget
-    - apk add --no-cache mailx
-    - chmod +x ./email/send_email_script.sh
-  dependencies:
-    - container_scanning
-  tags:
-    - docker
-  rules:
-    - when: never
+# send_email:
+#   stage: send_email
+#   script:
+#     - if [ -f "container-scan-result.txt" ]; then ./email/send_email_script.sh; fi
+#     # if [ -f "$CI_PROJECT_DIR/container-scan-result.txt" ]
+#   before_script:
+#     - echo $CI_JOB_URL
+#     - apk add --no-cache wget
+#     - apk add --no-cache mailx
+#     - chmod +x ./email/send_email_script.sh
+#   dependencies:
+#     - container_scanning
+#   tags:
+#     - docker
 
 
-    
+
+
 # for creating project runners
 # https://killercoda.com/rkalluru
 # volumes = ["/cache", "/var/run/docker.sock:/var/run/docker.sock", "/builds:/builds"]
