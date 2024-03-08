@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import fs from "fs";
+const mongoose = require("mongoose");
+const fs = require("fs");
 
 // MongoDB connection URI
 const uri = process.env.MONGO_URL;
