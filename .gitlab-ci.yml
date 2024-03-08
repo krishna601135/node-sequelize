@@ -16,7 +16,9 @@ package_backend:
   tags:
     - docker
   before_script:
-    - apk update && apk add --no-cache nodejs npm && apk add --no-cache gnupg
+    - apk update
+    - apk add --no-cache nodejs npm 
+    - apk add --no-cache gnupg
     - echo "$ENV_PASS_PHRASE" | gpg --batch --yes --passphrase-fd 0 --decrypt --output .env .env.gpg
     - echo "$CI_GITLAB_TOKEN" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
   script:
@@ -85,7 +87,7 @@ deploy_backend:
     - docker
 
 
-    
+
 
 #########sending email to the developement team if any high vulnerbilities found in container_scanning stage
 send_email:
