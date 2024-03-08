@@ -2,10 +2,10 @@ const { MongoClient } = require('mongodb');
 const fs = require('fs');
 
 // MongoDB connection URI
-const uri = 'mongodb://localhost:27017';
+const uri = process.env.MONGO_URL;
 
 // Database name
-const dbName = 'your_database_name';
+const dbName = process.env.DATABASE_NAME;
 
 // Collection name
 const collectionName = 'reports';
