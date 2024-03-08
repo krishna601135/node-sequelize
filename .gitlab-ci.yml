@@ -96,10 +96,11 @@ send_email:
     - container_scanning
   tags:
     - docker
-  when: never
+  rules:
+    - when: never
 
 
-
+    
 # for creating project runners
 # https://killercoda.com/rkalluru
 # volumes = ["/cache", "/var/run/docker.sock:/var/run/docker.sock", "/builds:/builds"]
