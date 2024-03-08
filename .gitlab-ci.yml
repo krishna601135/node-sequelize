@@ -99,7 +99,7 @@ send_email:
     # - echo $CI_JOB_URL
     # - apk add --no-cache wget
     # - apk add --no-cache mailx
-    - apk add --no-cache mongodb-tools
+    - apk add --no-cache mongodb-client
     - chmod +x ./email/send_email_script.sh
   dependencies:
     - container_scanning
