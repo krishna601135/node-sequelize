@@ -56,7 +56,7 @@ container_scanning:
   tags:
     - docker
   dependencies:
-    - package_backendapk add --no-cache nodejs npm
+    - package_backend
 
 
 #######deploying backend if no vulnerbilites were found
