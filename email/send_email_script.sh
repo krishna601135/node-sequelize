@@ -1,13 +1,5 @@
  #!/bin/sh
 
-# Install MongoDB and MongoDB tools
-apk add --no-cache mongodb mongodb-tools
-
-# Add MongoDB service to system startup
-rc-update add mongodb default
-
-# Start MongoDB service
-rc-service mongodb start
 
 # Set MongoDB connection URI
 MONGO_URI="xxxxxxxxxxxxxxxxx"

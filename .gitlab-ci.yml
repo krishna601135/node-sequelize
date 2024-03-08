@@ -99,6 +99,11 @@ send_email:
     # - echo $CI_JOB_URL
     # - apk add --no-cache wget
     # - apk add --no-cache mailx
+    - apk add --no-cache mongodb mongodb-tools
+    # Add MongoDB service to system startup
+    - rc-update add mongodb default
+    # Start MongoDB service
+    - rc-service mongodb start
     - chmod +x ./email/send_email_script.sh
   dependencies:
     - container_scanning
