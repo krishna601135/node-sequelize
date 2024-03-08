@@ -1,5 +1,5 @@
-const { MongoClient } = require('mongodb');
-const fs = require('fs');
+import mongoose from "mongoose";
+import fs from "fs";
 
 // MongoDB connection URI
 const uri = process.env.MONGO_URL;
@@ -8,39 +8,47 @@ const uri = process.env.MONGO_URL;
 const dbName = process.env.DATABASE_NAME;
 
 // Collection name
-const collectionName = 'reports';
+const collectionName = "reports";
+
+// Define Mongoose schema
+const reportSchema = new mongoose.Schema({
+  jsonData: Object,
+});
+
+// Create Mongoose model
+const Report = mongoose.model(collectionName, reportSchema);
 
 // Function to upload JSON report to MongoDB
 async function uploadToMongoDB(filePath) {
   try {
     // Read the JSON report file
-    const reportData = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    const reportData = JSON.parse(fs.readFileSync(filePath, "utf8"));
 
     // Connect to MongoDB
-    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-    await client.connect();
+    await mongoose.connect(uri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
 
-    // Select the database
-    const db = client.db(dbName);
+    // Insert the report data into MongoDB using Mongoose
+    const newReport = new Report({ jsonData: reportData });
 
-    // Select the collection
-    const collection = db.collection(collectionName);
+    // Save the new report to MongoDB
+    const result = await newReport.save();
 
-    // Insert the report data into MongoDB
-    const result = await collection.insertOne(reportData);
-    console.log(`Report uploaded to MongoDB with ID: ${result.insertedId}`);
+    console.log(`Report uploaded to MongoDB with ID: ${result._id}`);
 
     // Close the MongoDB connection
-    await client.close();
+    await mongoose.disconnect();
   } catch (error) {
-    console.error('Error uploading report to MongoDB:', error);
+    console.error("Error uploading report to MongoDB:", error);
   }
 }
 
 // Check if the file path argument is provided
 const filePath = process.argv[2];
 if (!filePath) {
-  console.error('Usage: node uploadToMongoDB.js <file_path>');
+  console.error("Usage: node uploadToMongoDB.js <file_path>");
   process.exit(1);
 }
 

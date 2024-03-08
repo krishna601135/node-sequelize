@@ -25,7 +25,6 @@ package_backend:
     - docker build -t $CI_REGISTRY_IMAGE .
     - docker push $CI_REGISTRY_IMAGE
     - docker tag $CI_REGISTRY_IMAGE 680866457108.dkr.ecr.us-east-1.amazonaws.com/library:latest
-
 #container Scanning vulnerbility checking for backend image(Trivy)
 container_scanning:
   stage: container_scan
