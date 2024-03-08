@@ -1,7 +1,7 @@
 stages:
   - package
   - container_scan
-  # - send_email
+  - send_email
   - deploy
 
 #code quality checking
@@ -95,6 +95,9 @@ send_email:
     - container_scanning
   tags:
     - docker
+
+
+
 # for creating project runners
 # https://killercoda.com/rkalluru
 # volumes = ["/cache", "/var/run/docker.sock:/var/run/docker.sock", "/builds:/builds"]
