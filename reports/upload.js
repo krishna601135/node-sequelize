@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const fs = require("fs");
 
 // MongoDB connection URI
-const uri = "mongodb+srv://library:saimohanlib@cluster0.k1eoilz.mongodb.net/online-library";
+const uri = process.env.MONGO_URL;
 
 // Database name
 const dbName = process.env.DATABASE_NAME;
@@ -25,10 +25,7 @@ async function uploadToMongoDB(filePath) {
     const reportData = JSON.parse(fs.readFileSync(filePath, "utf8"));
 
     // Connect to MongoDB
-    await mongoose.connect(uri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(uri);
 
     // Insert the report data into MongoDB using Mongoose
     const newReport = new Report({ jsonData: reportData });
