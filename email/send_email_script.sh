@@ -14,15 +14,7 @@
 # # Send email with attachment
 # echo -e "$EMAIL_BODY" | mail -s "$EMAIL_SUBJECT" "$RECIPIENT" -a "container-scanning-report.json" 
 
+MONGO_URI="mongodb+srv://library:saimohanlib@cluster0.k1eoilz.mongodb.net/online-library"
 
-mongo --eval "db = connect('mongodb+srv://library:saimohanlib@cluster0.k1eoilz.mongodb.net/online-library')"
-
-
-RESULT=$?   # returns 0 if mongo eval succeeds
-
-if [ $RESULT -ne 0 ]; then
-    echo "mongodb not running"
-    exit 1
-else
-    echo "mongodb running!"
-fi
+# Connect to MongoDB
+mongo $MONGO_URI --eval "print('Successfully connected to MongoDB')"

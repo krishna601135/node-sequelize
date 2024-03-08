@@ -26,6 +26,9 @@ package_backend:
     - docker push $CI_REGISTRY_IMAGE
     - docker tag $CI_REGISTRY_IMAGE 680866457108.dkr.ecr.us-east-1.amazonaws.com/library:latest
 
+
+
+
 #container Scanning vulnerbility checking for backend image(Trivy)
 container_scanning:
   stage: container_scan
@@ -59,6 +62,9 @@ container_scanning:
   dependencies:
     - package_backend
 
+
+
+
 #######deploying backend if no vulnerbilites were found
 deploy_backend:
   stage: deploy
@@ -77,6 +83,9 @@ deploy_backend:
     - container_scanning
   tags:
     - docker
+
+
+    
 
 #########sending email to the developement team if any high vulnerbilities found in container_scanning stage
 send_email:
