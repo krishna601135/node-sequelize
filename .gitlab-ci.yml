@@ -8,7 +8,7 @@ stages:
 # sonar scanning:
 
 .gpg: &gpg
-  script:
+  before_script:
     - apk update
     - apk add --no-cache nodejs npm
     - apk add --no-cache gnupg
@@ -20,18 +20,17 @@ package_backend:
   image: docker:20.10.16
   services:
     - docker:20.10.16-dind
-  tags:
-    - docker
   extends:
     - .gpg
-  before_script:
-    - echo "$CI_GITLAB_TOKEN" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
   script:
     - npm install
     - npm run build
+    - echo "$CI_GITLAB_TOKEN" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
     - docker build -t $CI_REGISTRY_IMAGE .
     - docker push $CI_REGISTRY_IMAGE
     - docker tag $CI_REGISTRY_IMAGE 680866457108.dkr.ecr.us-east-1.amazonaws.com/library:latest
+  tags:
+    - docker
 
 #container Scanning vulnerbility checking for backend image(Trivy)
 container_scanning:
@@ -61,10 +60,10 @@ container_scanning:
     paths:
       - container-scanning-report.json
       - container-scan-result.txt
-  tags:
-    - docker
   dependencies:
     - package_backend
+  tags:
+    - docker
 
 #######deploying backend if no vulnerbilites were found
 deploy_backend:
