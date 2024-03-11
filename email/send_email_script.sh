@@ -7,7 +7,6 @@ RECIPIENT="krishnakakarapathi@gmail.com"
 
 #  curl --location --header "PRIVATE-TOKEN: 9koXpg98eAheJpvBs5tK" "https://gitlab.example.com/api/v4/projects/1/jobs/8/artifacts"
 
-# https://gitlab.com/gitlabworkflow/online-library/-/jobs/6363017609
 # Download the artifact using wget
 wget -O container-scanning-report.json "https://gitlab.com/gitlabworkflow/online-library/-/jobs/6363017609/artifacts/raw/container-scanning-report.json"
 
@@ -16,3 +15,5 @@ EMAIL_BODY="Hello,\n\nPlease find attached the container scanning report.\n\nReg
 
 # Send email with attachment
 echo -e "$EMAIL_BODY" | mail -s "$EMAIL_SUBJECT" "$RECIPIENT" -a "container-scanning-report.json"
+
+
