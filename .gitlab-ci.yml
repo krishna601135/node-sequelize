@@ -50,13 +50,9 @@ container_scanning:
     # cache cleanup is needed when scanning images with the same tags, it does not remove the database
     - time trivy image --clear-cache
     - trivy image --format json -o container-scanning-report.json --severity HIGH --exit-code 1 $CI_REGISTRY_IMAGE || echo "FAILED" > container-scan-result.txt\
-    - apk update
-    - apk add --no-cache nodejs npm
+    - apk update && apk add --no-cache nodejs npm
     - npm install mongodb
-    - npm install dotenv-webpack@8.0.1
-    - echo $MONGO_URL
-    - export MONGO_URL=$MONGO_URL
-    - node reports/upload.js container-scanning-report.json $MONGO_URL
+    - node reports/upload.js container-scanning-report.json
   artifacts:
     when: always
     paths:
@@ -98,7 +94,7 @@ send_email:
   script:
     - apk update
     - apk add --no-cache mailx
-    - apk add --no-cache mongodb-tools
+    - apk add --no-cache mongodb
     - mongo --version
     # - chmod +x ./email/send_email_script.sh
   dependencies:
