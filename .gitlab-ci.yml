@@ -7,7 +7,7 @@ stages:
 #code quality checking
 # sonar scanning:
 
-.gpg:
+.gpg: &gpg
   script:
     - apk update
     - apk add --no-cache nodejs npm
