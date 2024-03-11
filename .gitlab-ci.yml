@@ -7,6 +7,13 @@ stages:
 #code quality checking
 # sonar scanning:
 
+.gpg:
+  script:
+    - apk update
+    - apk add --no-cache nodejs npm
+    - apk add --no-cache gnupg
+    - echo "$ENV_PASS_PHRASE" | gpg --batch --yes --passphrase-fd 0 --decrypt --output .env .env.gpg
+
 ######building docker image
 package_backend:
   stage: package
@@ -15,11 +22,9 @@ package_backend:
     - docker:20.10.16-dind
   tags:
     - docker
+  extends:
+    - .gpg
   before_script:
-    - apk update
-    - apk add --no-cache nodejs npm 
-    - apk add --no-cache gnupg
-    - echo "$ENV_PASS_PHRASE" | gpg --batch --yes --passphrase-fd 0 --decrypt --output .env .env.gpg
     - echo "$CI_GITLAB_TOKEN" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
   script:
     - npm install
@@ -27,9 +32,6 @@ package_backend:
     - docker build -t $CI_REGISTRY_IMAGE .
     - docker push $CI_REGISTRY_IMAGE
     - docker tag $CI_REGISTRY_IMAGE 680866457108.dkr.ecr.us-east-1.amazonaws.com/library:latest
-
-
-
 
 #container Scanning vulnerbility checking for backend image(Trivy)
 container_scanning:
@@ -64,9 +66,6 @@ container_scanning:
   dependencies:
     - package_backend
 
-
-
-
 #######deploying backend if no vulnerbilites were found
 deploy_backend:
   stage: deploy
@@ -86,9 +85,6 @@ deploy_backend:
   tags:
     - docker
 
-
-
-
 #########sending email to the developement team if any high vulnerbilities found in container_scanning stage
 send_email:
   stage: send_email
@@ -98,8 +94,8 @@ send_email:
   before_script:
     # - echo $CI_JOB_URL
     # - apk add --no-cache wget
-    # - apk add --no-cache mailx
     - apk update
+    - apk add --no-cache mailx
     - apk add mongodb-tools
     - mongo --version
     - chmod +x ./email/send_email_script.sh
@@ -107,41 +103,3 @@ send_email:
     - container_scanning
   tags:
     - docker
-
-
-
-
-# for creating project runners
-# https://killercoda.com/rkalluru
-# volumes = ["/cache", "/var/run/docker.sock:/var/run/docker.sock", "/builds:/builds"]
-# sudo usermod -aG docker root
-
-# commands in deploy_backend:
-# - apt-get install wget -y
-#     - pwd
-#     - ls
-#     - chmod +x deploy/ec2/*
-#     - deploy/ec2/deploy.sh
-# sendEmail:
-#   stage: send-email
-
-# registry.gitlab.example.com/my_group/my_project CI_REGISTRY_IMAGE format
-# CI_COMMIT_REF_SLUG --> CI_COMMIT_REF_NAME in lowercase, shortened to 63 bytes, and with everything except 0-9 and a-z replaced with -.
-# No leading / trailing -. Use in URLs, host names and domain names.
-
-# Frontend:
-# react
-
-# backend:
-# node
-# node js through AWS communication
-# to save cost we did not integrate with frontned
-# communication happens through nodjs
-
-# Updates are through rest API's for the frontend to be consumed
-# AWS keeps on updating frequently every minute through node we have written a process for everyday like we are writting a CRON job to specify when the job should run we have written a service there also in CRON job
-# through this we are getting the realtime data for it
-# the data is being saved in mongo db and through REST API's we are getting the data and consuming them in the front end.
-
-#   - echo $CI_JOB_URL
-#   - echo $CI_PROJECT_DIR
