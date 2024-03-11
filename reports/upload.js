@@ -1,9 +1,6 @@
 const mongoose = require("mongoose");
 const fs = require("fs");
 
-// MongoDB connection URI
-const uri = process.env.MONGO_URL
-
 // Collection name
 const collectionName = "reports";
 
@@ -12,17 +9,16 @@ const reportSchema = new mongoose.Schema({
   jsonData: Object,
 });
 
-// Create Mongoose model
 const Report = mongoose.model(collectionName, reportSchema);
 
 // Function to upload JSON report to MongoDB
-async function uploadToMongoDB(filePath) {
+async function uploadToMongoDB(filePath, mongourl) {
   try {
     // Read the JSON report file
-    const reportData = JSON.parse(fs.readFileSync(filePath, "utf8"));
-
-    // Connect to MongoDB
-    await mongoose.connect(uri);
+     const reportData = JSON.parse(fs.readFileSync(filePath, "utf8"));
+    
+     // Connect to MongoDB
+    await mongoose.connect(mongourl, () => console.log('Mongo DB Connected!!'));
 
     // Insert the report data into MongoDB using Mongoose
     const newReport = new Report({ jsonData: reportData });
@@ -47,4 +43,4 @@ if (!filePath) {
 }
 
 // Upload the report to MongoDB
-uploadToMongoDB(filePath);
+uploadToMongoDB(filePath, mongourl);
