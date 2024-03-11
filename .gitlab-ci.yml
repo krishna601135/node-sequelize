@@ -15,6 +15,8 @@ stages:
     - echo "$ENV_PASS_PHRASE" | gpg --batch --yes --passphrase-fd 0 --decrypt --output .env .env.gpg
 
 
+
+
 ######building docker image
 package_backend:
   stage: package
@@ -32,6 +34,8 @@ package_backend:
     - docker tag $CI_REGISTRY_IMAGE $ECR_PUSH_URL
   tags:
     - docker
+
+
 
 #container Scanning vulnerbility checking for backend image(Trivy)
 container_scanning:
@@ -64,6 +68,9 @@ container_scanning:
   tags:
     - docker
 
+
+
+
 #######deploying backend if no vulnerbilites were found
 deploy_backend:
   stage: deploy
@@ -83,13 +90,17 @@ deploy_backend:
   tags:
     - docker
 
+
+
+
+
 #########sending email to the developement team if any high vulnerbilities found in container_scanning stage
 send_email:
   stage: send_email
   script:
-    # - if [ -f "container-scan-result.txt" ]; then ./email/send_email_script.sh; fi
-    # - chmod +x ./email/send_email_script.sh
-    - if [ -f "container-scan-result.txt" ]; then cat container-scan-result.txt
+    - if [ -f "container-scan-result.txt" ]; then ./email/send_email_script.sh; fi
+    - chmod +x ./email/send_email_script.sh
+    - ./email/send_email_script.sh
 
   dependencies:
     - container_scanning
