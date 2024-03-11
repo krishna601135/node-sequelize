@@ -17,8 +17,11 @@ stages:
 
 .mongoinst: &mongoinst
   before_script:
-    - apk update
-    - apk add mongodb yaml-cpp=0.6.2-r2
+    - apk add --no-cache mongodb && apk add --no-cache mongodb-tools
+    - mkdir -p /data/db
+    - chown -R mongodb:mongodb /data/db
+    - rc-update add mongodb default
+    - rc-service mongodb start
     - mongo --version
 
 ######building docker image
