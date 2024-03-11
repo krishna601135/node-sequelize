@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const fs = require("fs");
 
 // MongoDB connection URI
-const uri = "mongodb+srv://library:saimohanlib@cluster0.k1eoilz.mongodb.net/online-library";
+const uri = process.env.MONGO_URL
 
 // Collection name
 const collectionName = "reports";

@@ -28,7 +28,7 @@ package_backend:
     - echo "$CI_GITLAB_TOKEN" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
     - docker build -t $CI_REGISTRY_IMAGE .
     - docker push $CI_REGISTRY_IMAGE
-    - docker tag $CI_REGISTRY_IMAGE 680866457108.dkr.ecr.us-east-1.amazonaws.com/library:latest
+    - docker tag $CI_REGISTRY_IMAGE $ECR_PUSH_URL
   tags:
     - docker
 
@@ -43,15 +43,13 @@ container_scanning:
     TRIVY_USERNAME: "$CI_REGISTRY_USER"
     TRIVY_PASSWORD: "$CI_GITLAB_TOKEN"
     TRIVY_AUTH_URL: "$CI_REGISTRY"
-  before_script:
-    - apk update && apk add --no-cache gnupg
-    - echo "$ENV_PASS_PHRASE" | gpg --batch --yes --passphrase-fd 0 --decrypt --output .env .env.gpg
+  extends:
+    - .gpg
   script:
     - trivy --version
     # cache cleanup is needed when scanning images with the same tags, it does not remove the database
     - time trivy image --clear-cache
     - trivy image --format json -o container-scanning-report.json --severity HIGH --exit-code 1 $CI_REGISTRY_IMAGE || echo "FAILED" > container-scan-result.txt
-    - apk add --no-cache nodejs npm
     - npm install mongodb
     - npm install dotenv-webpack@8.0.1
     - node reports/upload.js container-scanning-report.json
@@ -75,7 +73,7 @@ deploy_backend:
     - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY
     - export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
     - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 680866457108.dkr.ecr.us-east-1.amazonaws.com
-    - docker push 680866457108.dkr.ecr.us-east-1.amazonaws.com/library:latest
+    - docker push $ECR_PUSH_URL
     - docker logout
     - chmod +x ./deploy/ec2/*
     - ./deploy/ec2/deploy.sh
@@ -87,17 +85,18 @@ deploy_backend:
 #########sending email to the developement team if any high vulnerbilities found in container_scanning stage
 send_email:
   stage: send_email
-  script:
-    - if [ -f "container-scan-result.txt" ]; then ./email/send_email_script.sh; fi
-    # if [ -f "$CI_PROJECT_DIR/container-scan-result.txt" ]
-  before_script:
+  # script:
+  #   - if [ -f "container-scan-result.txt" ]; then ./email/send_email_script.sh; fi
+  #   # if [ -f "$CI_PROJECT_DIR/container-scan-result.txt" ]
+  # before_script:
     # - echo $CI_JOB_URL
     # - apk add --no-cache wget
+  script:
     - apk update
     - apk add --no-cache mailx
-    - apk add mongodb-tools
-    - mongo --version
-    - chmod +x ./email/send_email_script.sh
+    - apk add --no-cache mongodb-tools
+    - mongosh --version
+    # - chmod +x ./email/send_email_script.sh
   dependencies:
     - container_scanning
   tags:
