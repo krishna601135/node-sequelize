@@ -51,7 +51,6 @@ container_scanning:
     # cache cleanup is needed when scanning images with the same tags, it does not remove the database
     - time trivy image --clear-cache
     - trivy image --format json -o container-scanning-report.json --severity HIGH --exit-code 1 $CI_REGISTRY_IMAGE || echo "FAILED" > container-scan-result.txt\
-    - npm install mongodb
     - npm install -g typescript
     - tsc reports/upload.ts    
     - node reports/upload.js container-scanning-report.json
