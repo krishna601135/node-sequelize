@@ -22,7 +22,7 @@ async function uploadToMongoDB(filePath, mongourl) {
      const reportData = JSON.parse(fs.readFileSync(filePath, "utf8"));
     
      // Connect to MongoDB
-    await mongoose.connect(uri, () => console.log('Mongo DB Connected!!'));
+    await mongoose.connect(uri);
 
     // Insert the report data into MongoDB using Mongoose
     const newReport = new Report({ jsonData: reportData });
