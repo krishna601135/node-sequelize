@@ -15,15 +15,6 @@ stages:
     - echo "$ENV_PASS_PHRASE" | gpg --batch --yes --passphrase-fd 0 --decrypt --output .env .env.gpg
 
 
-.mongoinst: &mongoinst
-  before_script:
-    - apk add --no-cache mongodb && apk add --no-cache mongodb-tools
-    - mkdir -p /data/db
-    - chown -R mongodb:mongodb /data/db
-    - rc-update add mongodb default
-    - rc-service mongodb start
-    - mongo --version
-
 ######building docker image
 package_backend:
   stage: package
@@ -96,16 +87,16 @@ deploy_backend:
 send_email:
   stage: send_email
   # script:
-  #   - if [ -f "container-scan-result.txt" ]; then ./email/send_email_script.sh; fi
   #   # if [ -f "$CI_PROJECT_DIR/container-scan-result.txt" ]
-  # before_script:
-  # - echo $CI_JOB_URL
-  # - apk add --no-cache wget
-  extends:
-    - .mongoinst
+  before_script:
+  - apk update
+  - apk add --no-cache curl
+  - apk add --no-cache mailx
+  - apk add --no-cache wget
   script:
-    - apk add --no-cache mailx
-    # - chmod +x ./email/send_email_script.sh
+    - chmod +x ./email/send_email_script.sh
+    - if [ -f "container-scan-result.txt" ]; then ./email/send_email_script.sh; fi
+
   dependencies:
     - container_scanning
   tags:
