@@ -1,5 +1,5 @@
 if [ -f "container-scan-result.txt" ]; then
-    echo "Container scanning failed. Skipping deployment."
+    echo "vulnerabilities found. Skipping deployment."
 else
     echo "No vulnerabilities found. Deploying image..."
 
