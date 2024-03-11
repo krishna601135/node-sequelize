@@ -55,6 +55,7 @@ container_scanning:
     - npm install mongodb
     - npm install dotenv-webpack@8.0.1
     - echo $MONGO_URL
+    - export MONGO_URL=$MONGO_URL
     - node reports/upload.js container-scanning-report.json $MONGO_URL
   artifacts:
     when: always
@@ -92,8 +93,8 @@ send_email:
   #   - if [ -f "container-scan-result.txt" ]; then ./email/send_email_script.sh; fi
   #   # if [ -f "$CI_PROJECT_DIR/container-scan-result.txt" ]
   # before_script:
-    # - echo $CI_JOB_URL
-    # - apk add --no-cache wget
+  # - echo $CI_JOB_URL
+  # - apk add --no-cache wget
   script:
     - apk update
     - apk add --no-cache mailx

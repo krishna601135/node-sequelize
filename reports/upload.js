@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 const fs = require("fs");
 
+let filePath = process.argv[2];
+
+let mongourl = process.argv[3];
+
+
 // Collection name
 const collectionName = "reports";
 
@@ -36,7 +41,7 @@ async function uploadToMongoDB(filePath, mongourl) {
 }
 
 // Check if the file path argument is provided
-const filePath = process.argv[2];
+// const filePath = process.argv[2];
 if (!filePath) {
   console.error("Usage: node uploadToMongoDB.js <file_path>");
   process.exit(1);
