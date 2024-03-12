@@ -6,7 +6,6 @@
 
 
 # MongoDB Connection Details
-MONGO_HOST="mongodb+srv://library:saimohanlib@cluster0.k1eoilz.mongodb.net/online-library"
 DATABASE_NAME="online-library"
 COLLECTION_NAME="reports"
 
@@ -21,7 +20,7 @@ OUTPUT_FILE="container_scanning_report.txt"
 ATTACHMENT="container_scanning_report.txt"
 
 # Connect to MongoDB and retrieve record
-mongosh --host $MONGO_HOST --eval "db.$COLLECTION_NAME.find().sort({ timestampField: -1 }).limit(1)" > $OUTPUT_FILE
+mongosh "mongodb+srv://cluster0.k1eoilz.mongodb.net/" --apiVersion 1 --username library --eval "db.$COLLECTION_NAME.find().sort({ timestampField: -1 }).limit(1)" > $OUTPUT_FILE
 
 # Send email with attachment
 echo "$BODY" | mailx -s "$SUBJECT" -a "$ATTACHMENT" -r "$SENDER" "$RECIPIENT"
