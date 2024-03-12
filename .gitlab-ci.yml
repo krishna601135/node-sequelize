@@ -97,10 +97,9 @@ deploy_backend:
 #########sending email to the developement team if any high vulnerbilities found in container_scanning stage
 send_email:
   stage: send_email
-  
-  before_script:
-    - apk add --no-cache wget
+  image: ubuntu:22.04
   script:
+    - apt-get install wget -y
     - ls
     - chmod +x ./email/send_email_script.sh
     - if [ -f "container-scan-result.txt" ]; then ./email/send_email_script.sh; fi
