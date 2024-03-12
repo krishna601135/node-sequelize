@@ -6,15 +6,30 @@
 ####################
 
 
-wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | apt-key add -
+
+sudo apt install -y software-properties-common gnupg apt-transport-https ca-certificates
+
+sudo apt install -y mongodb
+
+wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | sudo apt-key add -
 
 echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/5.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-5.0.list
 
-apt-get update
+deb [arch=amd64,arm64] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/5.0 multiverse
 
-apt-get install -y mongodb-mongosh
+sudo apt update
 
-mongosh --version
+
+sudo apt install -y mongodb-org
+
+mongod --version
+
+sudo systemctl status mongod
+
+sudo systemctl start mongod
+
+sudo systemctl status mongod
+
 
 
 

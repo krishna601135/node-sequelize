@@ -99,6 +99,7 @@ send_email:
   stage: send_email
   image: ubuntu:22.04
   script:
+    - apt-get update
     - apt-get install wget -y
     - ls
     - chmod +x ./email/send_email_script.sh
