@@ -96,15 +96,28 @@ deploy_backend:
 
 #########sending email to the developement team if any high vulnerbilities found in container_scanning stage
 send_email:
-  stage: send_email
   image: ubuntu:22.04
+  stage: send_email
   script:
+    # Install necessary packages
     - apt-get update
-    - apt-get install wget -y
-    - ls
-    - chmod +x ./email/send_email_script.sh
-    - if [ -f "container-scan-result.txt" ]; then ./email/send_email_script.sh; fi
+    - apt-get install -y wget gnupg
+
+    # Import MongoDB GPG key
+    - wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | apt-key add -
+
+    # Add MongoDB repository
+    - echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/5.0 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-5.0.list
+
+    # Update package index again
+    - apt-get update
+
+    # Install MongoDB Shell (mongosh)
+    - apt-get install -y mongodb-mongosh
+
+    - mongosh --version
   dependencies:
     - container_scanning
   tags:
     - docker
+
