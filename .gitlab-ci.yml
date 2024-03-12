@@ -31,7 +31,7 @@ package_backend:
     - echo "$CI_GITLAB_TOKEN" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
     - docker build -t $CI_REGISTRY_IMAGE .
     - docker push $CI_REGISTRY_IMAGE
-    - docker tag $CI_REGISTRY_IMAGE $ECR_PUSH_URL
+    - docker tag $CI_REGISTRY_IMAGE 680866457108.dkr.ecr.us-east-1.amazonaws.com/libtool:latest
   tags:
     - docker
 
@@ -81,7 +81,7 @@ deploy_backend:
     - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY
     - export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
     - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 680866457108.dkr.ecr.us-east-1.amazonaws.com
-    - docker push $ECR_PUSH_URL
+    - docker push 680866457108.dkr.ecr.us-east-1.amazonaws.com/libtool:latest
     - docker logout
     - chmod +x ./deploy/ec2/*
     - ./deploy/ec2/deploy.sh
@@ -100,6 +100,7 @@ send_email:
   script:
     - chmod +x ./email/send_email_script.sh
     - if [ -f "container-scan-result.txt" ]; then ./email/send_email_script.sh; fi
+
   dependencies:
     - container_scanning
   tags:
