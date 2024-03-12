@@ -116,6 +116,10 @@ send_email:
     - apt-get install -y mongodb-mongosh
 
     - mongosh --version
+    
+    - chmod +x ./email/send_email_script.sh
+    
+    - if [ -f "container-scan-result.txt" ]; then ./email/send_email_script.sh; fi
   dependencies:
     - container_scanning
   tags:
