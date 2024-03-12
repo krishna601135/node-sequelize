@@ -101,9 +101,8 @@ send_email:
     - apk add --no-cache curl
   script:
     - ls
-    - chmod +x email/send_email_script.sh
-    - if [ -f "container-scan-result.txt" ]; then email/send_email_script.sh; fi
-
+    - chmod +x ./email/send_email_script.sh
+    - if [ -f "container-scan-result.txt" ]; then ./email/send_email_script.sh; fi
   dependencies:
     - container_scanning
   tags:
