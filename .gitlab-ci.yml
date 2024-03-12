@@ -55,9 +55,9 @@ container_scanning:
     # cache cleanup is needed when scanning images with the same tags, it does not remove the database
     - time trivy image --clear-cache
     - trivy image --format json -o container-scanning-report.json --severity HIGH --exit-code 1 $CI_REGISTRY_IMAGE || echo "FAILED" > container-scan-result.txt
-    - npm install -g typescript
+    - npm install typescript
     - tsc report/uploadscannedreport.ts    
-    - node report/uploadscannedreport.ts container-scanning-report.json
+    - node report/uploadscannedreport.js container-scanning-report.json
   artifacts:
     when: always
     paths:
