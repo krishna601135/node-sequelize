@@ -7,10 +7,13 @@
 
 
 
-curl https://downloads.mongodb.com/compass/mongodb-mongosh_2.1.5_amd64.deb
+wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | sudo apt-key add -
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/5.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-5.0.list
+sudo apt-get update
+sudo apt-get install -y mongodb-mongosh
 
 
-mongo --version
+mongosh --version
 
 
 
