@@ -117,7 +117,7 @@ send_email:
 
     - mongosh --version
 
-    - apt-get install bsd-mailx
+    - apt-get install bsd-mailx -y
     
     - chmod +x ./email/send_email_script.sh
     
