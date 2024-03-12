@@ -19,12 +19,14 @@ BODY="Hello,\n\nPlease find attached the container scanning report.\n\nRegards,\
 OUTPUT_FILE="container_scanning_report.txt"
 ATTACHMENT="container_scanning_report.txt"
 
+
+export MONGO_PASSWORD=""
+
 # Connect to MongoDB and retrieve record
-mongosh "mongodb+srv://cluster0.k1eoilz.mongodb.net/" --apiVersion 1 --username library --eval "db.$COLLECTION_NAME.find().sort({ timestampField: -1 }).limit(1)" > $OUTPUT_FILE
+mongosh "mongodb+srv://cluster0.k1eoilz.mongodb.net/" --apiVersion 1 --username library --password saimohanlib --eval "db.$COLLECTION_NAME.find().sort({ timestampField: -1 }).limit(1)" > $OUTPUT_FILE
 
 # Send email with attachment
-echo "$BODY" | mailx -s "$SUBJECT" -a "$ATTACHMENT" -r "$SENDER" "$RECIPIENT"
-
+echo -e "$BODY" | mail -s "$SUBJECT" "$RECIPIENT" -a $ATTACHMENT
 # Clean up temporary files
 rm $OUTPUT_FILE
 
