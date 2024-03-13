@@ -29,12 +29,25 @@ mongosh "mongodb+srv://library:saimohanlib@cluster0.k1eoilz.mongodb.net/online-l
 
 # Send email with attachment
 echo $BODY | mailx -s $SUBJECT -a $OUTPUT_FILE -r $SENDER $RECIPIENT
+
+#$? contains the exit status of the last command.
 if [ $? -eq 0 ]; then
     echo "Email sent successfully"
 else
     echo "Failed to send email"
 fi
 # Clean up temporary files
+
+# Check Mail Log
+echo "Checking Mail Log..."
+grep "error" /var/log/mail.log
+
+# Check SMTP Configuration
+echo "Checking SMTP Configuration..."
+cat /etc/postfix/main.cf  # Adjust path if using a different MTA
+
+echo "SMTP Configuration Check Complete."
+
 rm $OUTPUT_FILE
 
 
