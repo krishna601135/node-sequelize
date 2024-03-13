@@ -18,7 +18,7 @@ BODY="Hello,\n\nPlease find attached the container scanning report.\n\nRegards,\
 # File Paths
 OUTPUT_FILE="container_scanning_report.txt"
 ATTACHMENT="container_scanning_report.txt"
-
+SMTP_SERVER="smtp.gmail.com"
 
 # export MONGO_PASSWORD=""
 
@@ -28,7 +28,9 @@ mongosh "mongodb+srv://library:saimohanlib@cluster0.k1eoilz.mongodb.net/online-l
 
 
 # Send email with attachment
-echo $BODY | mailx -s $SUBJECT -a $OUTPUT_FILE -r $SENDER $RECIPIENT
+# echo $BODY | mail -s $SUBJECT -a $OUTPUT_FILE -r $SENDER $RECIPIENT
+echo "$BODY" | mail -s $SUBJECT -a $OUTPUT_FILE -r $SENDER -S smtp=$SMTP_SERVER $RECIPIENT
+
 
 #$? contains the exit status of the last command.
 if [ $? -eq 0 ]; then
