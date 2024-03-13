@@ -30,7 +30,12 @@ mkfifo /var/spool/postfix/public/pickup
 service postfix restart
 
 # Send email with attachment
-echo -e "$BODY" | mail -s "$SUBJECT" "$RECIPIENT" -a $ATTACHMENT
+echo "$BODY" | mailx -s "$SUBJECT" -a "$OUTPUT_FILE" -r "$SENDER" "$RECIPIENT"
+if [ $? -eq 0 ]; then
+    echo "Email sent successfully"
+else
+    echo "Failed to send email"
+fi
 # Clean up temporary files
 rm $OUTPUT_FILE
 
