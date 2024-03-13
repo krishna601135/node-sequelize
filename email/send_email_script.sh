@@ -30,7 +30,7 @@ SMTP_SERVER="smtp.gmail.com"
 
 # Edit mail configuration file and add SMTP server setting
 if [ -f "/etc/mail.rc" ]; then
-    sudo sed -i "1i set smtp=smtp://$SMTP_SERVER" /etc/mail.rc
+    sed -i "1i set smtp=smtp://$SMTP_SERVER" /etc/mail.rc
 elif [ -f "$HOME/.mailrc" ]; then
     echo "set smtp=smtp://$SMTP_SERVER" >> "$HOME/.mailrc"
 else
@@ -51,15 +51,6 @@ else
 fi
 # Clean up temporary files
 
-# Check Mail Log
-echo "Checking Mail Log..."
-grep "error" /var/log/mail.log
-
-# Check SMTP Configuration
-echo "Checking SMTP Configuration..."
-cat /etc/postfix/main.cf  # Adjust path if using a different MTA
-
-echo "SMTP Configuration Check Complete."
 
 rm $OUTPUT_FILE
 
