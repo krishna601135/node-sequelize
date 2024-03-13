@@ -26,10 +26,9 @@ ATTACHMENT="container_scanning_report.txt"
 mongosh "mongodb+srv://library:saimohanlib@cluster0.k1eoilz.mongodb.net/online-library" --apiVersion 1 --username library --password saimohanlib --eval "db.$COLLECTION_NAME.find().sort({ timestampField: -1 }).limit(1)" > $OUTPUT_FILE
 
 
-cat $OUTPUT_FILE
 
 # Send email with attachment
-echo "$BODY" | mailx -s "$SUBJECT" -a "$OUTPUT_FILE" -r "$SENDER" "$RECIPIENT"
+echo $BODY | mailx -s $SUBJECT -a $OUTPUT_FILE -r $SENDER $RECIPIENT
 if [ $? -eq 0 ]; then
     echo "Email sent successfully"
 else
