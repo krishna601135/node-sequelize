@@ -16,17 +16,16 @@ SUBJECT="Container Scanning Report"
 BODY="Hello,\n\nPlease find attached the container scanning report.\n\nRegards,\nYour Team"
 
 # File Paths
-OUTPUT_FILE="container_scanning_report.txt"
-ATTACHMENT="container_scanning_report.txt"
+OUTPUT_FILE="container_scanning_report.json"
 
 
 # export MONGO_PASSWORD=""
 
 # Connect to MongoDB and retrieve record
-mongosh "mongodb+srv://cluster0.k1eoilz.mongodb.net/" --apiVersion 1 --username library --password saimohanlib --eval "db.$COLLECTION_NAME.find().sort({ timestampField: -1 }).limit(1)" > $OUTPUT_FILE
+mongosh "mongodb+srv://xxxxxxxx.xxxxxxxx.mongodb.net/" --apiVersion 1 --username xxxxxxxxxx --password xxxxxxxxxxxx --eval "db.$COLLECTION_NAME.find().sort({ timestampField: -1 }).limit(1)" > $OUTPUT_FILE
 
 
-echo $OUTPUT_FILE
+cat "$OUTPUT_FILE"
 
 # Send email with attachment
 echo "$BODY" | mailx -s "$SUBJECT" -a "$OUTPUT_FILE" -r "$SENDER" "$RECIPIENT"
