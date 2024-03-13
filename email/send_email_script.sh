@@ -20,10 +20,14 @@ OUTPUT_FILE="container_scanning_report.txt"
 ATTACHMENT="container_scanning_report.txt"
 
 
-export MONGO_PASSWORD=""
+# export MONGO_PASSWORD=""
 
 # Connect to MongoDB and retrieve record
 mongosh "mongodb+srv://cluster0.k1eoilz.mongodb.net/" --apiVersion 1 --username library --password saimohanlib --eval "db.$COLLECTION_NAME.find().sort({ timestampField: -1 }).limit(1)" > $OUTPUT_FILE
+
+mkfifo /var/spool/postfix/public/pickup
+
+service postfix restart
 
 # Send email with attachment
 echo -e "$BODY" | mail -s "$SUBJECT" "$RECIPIENT" -a $ATTACHMENT
