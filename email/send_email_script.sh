@@ -25,10 +25,6 @@ ATTACHMENT="container_scanning_report.txt"
 # Connect to MongoDB and retrieve record
 mongosh "mongodb+srv://cluster0.k1eoilz.mongodb.net/" --apiVersion 1 --username library --password saimohanlib --eval "db.$COLLECTION_NAME.find().sort({ timestampField: -1 }).limit(1)" > $OUTPUT_FILE
 
-mkfifo /var/spool/postfix/public/pickup
-
-service postfix restart
-
 # Send email with attachment
 echo "$BODY" | mailx -s "$SUBJECT" -a "$OUTPUT_FILE" -r "$SENDER" "$RECIPIENT"
 if [ $? -eq 0 ]; then

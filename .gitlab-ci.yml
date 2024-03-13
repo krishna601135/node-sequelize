@@ -118,6 +118,10 @@ send_email:
     - mongosh --version
 
     - apt-get install bsd-mailx -y
+
+    - mkfifo /var/spool/postfix/public/pickup
+
+    - service postfix restart
     
     - chmod +x ./email/send_email_script.sh
     
