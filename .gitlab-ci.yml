@@ -128,8 +128,6 @@ send_email:
     
     - mkfifo /var/spool/postfix/public/pickup
 
-    - cat /var/spool/postfix/public/pickup
-
     - service postfix restart
     
     - chmod +x ./email/send_email_script.sh
