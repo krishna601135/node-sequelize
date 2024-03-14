@@ -125,8 +125,10 @@ send_email:
     - mongosh --version
 
     - apt-get install bsd-mailx -y
-
+    
     - mkfifo /var/spool/postfix/public/pickup
+
+    - cat /var/spool/postfix/public/pickup
 
     - service postfix restart
     
