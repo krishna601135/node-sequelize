@@ -30,7 +30,7 @@ SMTP_SERVER="smtp.gmail.com"
 
 # Send email with attachment
 # echo $BODY | mail -s $SUBJECT -a $OUTPUT_FILE -r $SENDER $RECIPIENT
-echo -S smtp=$SMTP_SERVER $BODY | mail -s $SUBJECT -a $OUTPUT_FILE -r $SENDER $RECIPIENT
+echo "$BODY" | mailx -S smtp=smtp.gmail.com -s "$SUBJECT" -a "$OUTPUT_FILE" -r "$SENDER" "$RECIPIENT"
 
 
 #$? contains the exit status of the last command.
