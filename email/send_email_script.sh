@@ -26,13 +26,15 @@ ATTACHMENT="container_scanning_report.txt"
 # Connect to MongoDB and retrieve record
 mongosh "mongodb+srv://library:saimohanlib@cluster0.k1eoilz.mongodb.net/online-library" --apiVersion 1 --username library --password saimohanlib --eval "db.$COLLECTION_NAME.find().sort({ timestampField: -1 }).limit(1)" > $OUTPUT_FILE
 
+#cat $OUTPUT_FILE
+
 # Set SMTP server address
 SMTP_SERVER="smtp.gmail.com"
 
 
 # Send email with attachment
 # echo $BODY | mail -s $SUBJECT -a $OUTPUT_FILE -r $SENDER $RECIPIENT
-echo "$BODY" | mail -s "$SUBJECT" -S smtp=mailrelay.domain.com:25 -a "$OUTPUT_FILE" krishnakakarapathi@gmail.com
+echo $BODY | mail -s $SUBJECT -a $OUTPUT_FILE krishnakakarapathi@gmail.com
 
 
 #$? contains the exit status of the last command.

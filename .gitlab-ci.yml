@@ -16,6 +16,12 @@ stages:
 
 
 
+#gitleaks
+#gitleaks image ref:https://github.com/gitleaks/gitleaks#getting-started
+#About gitleaks ref:https://akashchandwani.medium.com/what-is-gitleaks-and-how-to-use-it-a05f2fb5b034
+
+
+
 
 ######building docker image
 package_backend:
@@ -38,6 +44,7 @@ package_backend:
 
 
 #container Scanning vulnerbility checking for backend image(Trivy)
+#about trivy code ref:https://aquasecurity.github.io/trivy/v0.18.3/integrations/gitlab-ci/
 container_scanning:
   stage: container_scan
   image:
