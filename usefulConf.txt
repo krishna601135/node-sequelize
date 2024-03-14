@@ -3,6 +3,7 @@
 # for creating project runners
 # https://killercoda.com/rkalluru
 # volumes = ["/cache", "/var/run/docker.sock:/var/run/docker.sock", "/builds:/builds"]
+#nano 
 # sudo usermod -aG docker root
 
 # commands in deploy_backend:
