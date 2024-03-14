@@ -32,7 +32,7 @@ SMTP_SERVER="smtp.gmail.com"
 
 # Send email with attachment
 # echo $BODY | mail -s $SUBJECT -a $OUTPUT_FILE -r $SENDER $RECIPIENT
-echo "$BODY" | mailx -s "$SUBJECT" -S smtp=mailrelay.domain.com:25 -a "$OUTPUT_FILE" krishnakakarapathi@gmail.com
+echo "$BODY" | mail -s "$SUBJECT" -S smtp=mailrelay.domain.com:25 -a "$OUTPUT_FILE" krishnakakarapathi@gmail.com
 
 
 #$? contains the exit status of the last command.
