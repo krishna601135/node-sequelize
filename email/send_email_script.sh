@@ -1,3 +1,5 @@
+#!/bin/bash
+
 ######################
 #Author: Mohan
 #Date: 12/03/2024
@@ -30,7 +32,7 @@ SMTP_SERVER="smtp.gmail.com"
 
 # Send email with attachment
 # echo $BODY | mail -s $SUBJECT -a $OUTPUT_FILE -r $SENDER $RECIPIENT
-echo "$BODY" | mailx -S smtp=smtp.gmail.com -s "$SUBJECT" -a "$OUTPUT_FILE" -r "$SENDER" "$RECIPIENT"
+echo "$BODY" | mailx -S smtp="smtp.example.com" -s "$SUBJECT" -a "$OUTPUT_FILE" -r "$SENDER" "$RECIPIENT"
 
 
 #$? contains the exit status of the last command.
