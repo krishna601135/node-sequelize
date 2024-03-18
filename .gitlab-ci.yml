@@ -131,7 +131,8 @@ send_email:
 
     - mongosh --version
 
-    - apt-get install bsd-mailx -y
+    # - apt-get install bsd-mailx -y
+    - apt-get install mutt -y
     
     - mkfifo /var/spool/postfix/public/pickup
 
