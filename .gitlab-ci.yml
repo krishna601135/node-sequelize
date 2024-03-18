@@ -133,12 +133,6 @@ send_email:
 
     # - apt-get install bsd-mailx -y
     - apt-get install mutt -y
-    
-    - mkfifo /var/spool/postfix/public/pickup
-
-    - service postfix restart
-    
-    - cat /var/log/maillog
 
     - chmod +x ./email/send_email_script.sh
     
