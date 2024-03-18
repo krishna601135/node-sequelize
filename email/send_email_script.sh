@@ -34,7 +34,7 @@ SMTP_SERVER="smtp.gmail.com"
 
 # Send email with attachment
 # echo $BODY | mail -s $SUBJECT -a $OUTPUT_FILE -r $SENDER $RECIPIENT
-echo $BODY | mail -s $MAIL_SUBJECT -a $OUTPUT_FILE krishnakakarapathi@gmail.com
+echo $BODY | mail -s $MAIL_SUBJECT -A $OUTPUT_FILE krishnakakarapathi@gmail.com
 
 #$? contains the exit status of the last command.
 if [ $? -eq 0 ]; then
@@ -42,13 +42,6 @@ if [ $? -eq 0 ]; then
 else
     echo "Failed to send email"
 fi
-
-
-cd /var/log/maillog
-
-ls
-
-cat maillog
 
 
 # Clean up temporary files

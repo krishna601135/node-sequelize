@@ -1,4 +1,5 @@
 stages:
+  # - leaks
   - package
   - container_scan
   - send_email
@@ -20,7 +21,13 @@ stages:
 #gitleaks image ref:https://github.com/gitleaks/gitleaks#getting-started
 #About gitleaks ref:https://akashchandwani.medium.com/what-is-gitleaks-and-how-to-use-it-a05f2fb5b034
 
-
+# gitleaks:
+#   stage: leaks
+#   image: 
+#     name: "zricethezav/gitleaks"
+#     entrypoint: [""]
+#   script:
+#     - gitleaks -v --repo-path=./ --config=gitleaks.toml
 
 
 ######building docker image
@@ -130,6 +137,8 @@ send_email:
 
     - service postfix restart
     
+    - cat /var/log/maillog
+
     - chmod +x ./email/send_email_script.sh
     
     - if [ -f "container-scan-result.txt" ]; then ./email/send_email_script.sh; fi
