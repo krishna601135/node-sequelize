@@ -48,7 +48,7 @@
 # rm $OUTPUT_FILE
 
 
-echo "This is the body of the email" | mutt -s "Test Email" xyz@gmail.com
+echo "This is the body of the email" | mutt -s "Test Email" krishnakakarapathi@gmail.com
 if [ $? -eq 0 ]; then
     echo "Email sent successfully"
 else
