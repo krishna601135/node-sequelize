@@ -133,6 +133,7 @@ send_email:
 
     # - apt-get install bsd-mailx -y
     - apt-get install mutt -y
+    - apt-get install sendmail
 
     - chmod +x ./email/send_email_script.sh
     
