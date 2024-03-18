@@ -77,7 +77,7 @@ set message_cachedir = "~/.mutt/cache/bodies"
 set certificate_file = "~/.mutt/certificates"
 
 set from = 'krishnakakarapathi@gmail.com'
-set realname = 'Mohan K'
+set realname = 'mohan murali'
 
 set smtp_url = 'smtp://user@smtp.gmail.com:587/'
 set smtp_pass='applicationpass'
