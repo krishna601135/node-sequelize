@@ -80,7 +80,7 @@ set from = 'krishnakakarapathi@gmail.com'
 set realname = 'mohan murali'
 
 set smtp_url = 'smtp://user@smtp.gmail.com:587/'
-set smtp_pass='applicationpass'
+set smtp_pass='pkqk vzho vbth phuh'
 
 set move = no
 set imap_keepalive = 900
