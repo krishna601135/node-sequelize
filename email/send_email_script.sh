@@ -94,7 +94,7 @@ macro index,pager e "<enter-command>unset trash\n <delete-message>" "Gmail archi
 EOF
 
 # Configure ssmtp
-cat <<EOF | sudo tee /etc/ssmtp/ssmtp.conf
+cat <<EOF | tee /etc/ssmtp/ssmtp.conf
 root=kakarapathikrishna@gmail.com
 mailhub=smtp.gmail.com:587
 
