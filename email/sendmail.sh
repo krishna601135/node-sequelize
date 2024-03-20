@@ -27,4 +27,9 @@ make -C /etc/mail
 
 service sendmail reload
 
-echo "Test Email From SendMail" | mail -s "Sendmail Test" sandeep.a@xcubelabs.com
+echo "This is the body of the email" | mutt -s "Test Email" krishnakakarapathi@gmail.com
+if [ $? -eq 0 ]; then
+    echo "Email sent successfully"
+else
+    echo "Failed to send email"
+fi
