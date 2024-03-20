@@ -9,7 +9,7 @@ chmod 700 /etc/mail/authinfo
 
 # Create authentication file
 tee /etc/mail/authinfo/smtp-auth > /dev/null <<EOF
-AuthInfo:smtp.gmail.com "U:kakarapathikrishna@gmail.com" "P:pkqk vzho vbth phuh"
+AuthInfo:smtp.gmail.com "U:kakarapathikrishna@gmail.com" "P:wblgexuhhgnfxlys"
 
 EOF
 
