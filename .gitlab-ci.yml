@@ -2,7 +2,7 @@ stages:
   # - leaks
   - package
   - container_scan
-  - send_email
+  # - send_email
   - deploy
 
 #code quality checking
