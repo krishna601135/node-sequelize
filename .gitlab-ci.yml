@@ -104,7 +104,7 @@ container_scanning:
 
 
 
-#######deploying backend if no vulnerbilites were found
+#######deploying backend if no vulnerbilites we found
 deploy_backend:
   stage: deploy
   before_script:
