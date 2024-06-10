@@ -48,7 +48,7 @@ sonarqube-check:
 #     - gitleaks -v --repo-path=./ --config=gitleaks.toml
 
 
-######building docker image
+######building docker imaged
 package_backend:
   stage: package
   image: docker:20.10.16
