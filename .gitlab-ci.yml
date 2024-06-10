@@ -2,8 +2,8 @@ stages:
   - scan
   - package
   - container_scan
-  # - send_email
-  # - deploy
+  - send_email
+  - deploy
 
 #code quality checking
 # sonar scanning:
