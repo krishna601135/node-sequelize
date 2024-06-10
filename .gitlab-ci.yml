@@ -17,6 +17,8 @@ stages:
 
 sonarqube-check:
   stage: scan
+  tags:
+    - docker
   image: 
     name: sonarsource/sonar-scanner-cli:latest
     entrypoint: [""]
@@ -30,11 +32,8 @@ sonarqube-check:
   script: 
     - sonar-scanner
   allow_failure: true
-
   only:
     - feature/gitdock
-  tags:
-    - docker
 
 #gitleaks
 #gitleaks image ref:https://github.com/gitleaks/gitleaks#getting-started
