@@ -17,8 +17,8 @@ stages:
 
 sonarqube-check:
   stage: scan
-  tags:
-    - docker
+  # tags:
+  #   - docker
   image: 
     name: sonarsource/sonar-scanner-cli:latest
     entrypoint: [""]
@@ -63,8 +63,8 @@ package_backend:
     - docker build -t $CI_REGISTRY_IMAGE .
     - docker push $CI_REGISTRY_IMAGE
     - docker tag $CI_REGISTRY_IMAGE 975050132155.dkr.ecr.ap-south-1.amazonaws.com/libtool:latest
-  tags:
-    - docker
+  # tags:
+  #   - docker
 
 
 
@@ -97,8 +97,8 @@ container_scanning:
       - container-scan-result.txt
   dependencies:
     - package_backend
-  tags:
-    - docker
+  # tags:
+  #   - docker
 
 
 
@@ -119,8 +119,8 @@ deploy_backend:
     - ./deploy/ec2/deploy.sh
   dependencies:
     - container_scanning
-  tags:
-    - docker
+  # tags:
+  #   - docker
 
 
 
@@ -158,6 +158,6 @@ send_email:
     - if [ -f "container-scan-result.txt" ]; then ./email/sendmail.sh; fi
   dependencies:
     - container_scanning
-  tags:
-    - docker
+  # tags:
+  #   - docker
 
