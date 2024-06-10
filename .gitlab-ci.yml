@@ -18,6 +18,7 @@ stages:
 
 
 sonarqube-check:
+  stage: scan
   image: 
     name: sonarsource/sonar-scanner-cli:latest
     entrypoint: [""]
