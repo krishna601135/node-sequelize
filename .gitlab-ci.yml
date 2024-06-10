@@ -1,9 +1,9 @@
 stages:
-  # - leaks
+  - scan
   - package
   - container_scan
-  - send_email
-  - deploy
+  # - send_email
+  # - deploy
 
 #code quality checking
 # sonar scanning:
@@ -14,6 +14,24 @@ stages:
     - apk add --no-cache nodejs npm
     - apk add --no-cache gnupg
     - echo "$ENV_PASS_PHRASE" | gpg --batch --yes --passphrase-fd 0 --decrypt --output .env .env.gpg
+
+sonarqube-check:
+  stage: scan
+  image: 
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [""]
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
+    GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
+  script: 
+    - sonar-scanner
+  allow_failure: true
+  only:
+    - feature/gitdock
 
 
 
@@ -44,7 +62,7 @@ package_backend:
     - echo "$CI_GITLAB_TOKEN" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
     - docker build -t $CI_REGISTRY_IMAGE .
     - docker push $CI_REGISTRY_IMAGE
-    - docker tag $CI_REGISTRY_IMAGE 680866457108.dkr.ecr.ap-south-1.amazonaws.com/libtool:latest
+    - docker tag $CI_REGISTRY_IMAGE 975050132155.dkr.ecr.ap-south-1.amazonaws.com/libtool:latest
   tags:
     - docker
 
